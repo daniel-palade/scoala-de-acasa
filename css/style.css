@@ -442,9 +442,8 @@ h1, h2, h3, h4 {
 .password-wrap input { padding-right: 46px; }
 .password-wrap .toggle {
   position: absolute;
-  top: 50%;
+  right: 8px; top: 50%;
   transform: translateY(-50%);
-  right: 8px;
   border: none; background: transparent;
   font-size: 14px; color: var(--muted);
   padding: 6px;
