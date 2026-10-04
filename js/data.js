@@ -2,7 +2,7 @@
    Toate clasele: planificare REALĂ Editura EDU, anul școlar 2026–2027.
    - Clasa 0 (pregătitoare): orar + 5 module „Caiet de creație" (o temă/literă pe săptămână).
    - Clasele 1–2: orar + 5 module, fiecare cu unități tematice integrate.
-   - Clasele 3–4: orar + 5 module, cu unități de învățare pe disciplines (română, matematică, științe).
+   - Clasele 3–4: orar + 5 module, cu unități de învățare pe discipline (română, matematică, științe).
    Perioadele modulelor respectă structura oficială a anului școlar 2026–2027 (Ministerul Educației). */
 
 window.APP = {
@@ -58,6 +58,7 @@ window.APP = {
   ],
 
   structure: {
+    /* ---------- CLASA PREGĂTITOARE (REAL, Editura EDU 2026-2027) ---------- */
     0: {
       source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
       orar: [
@@ -84,7 +85,7 @@ window.APP = {
       modules: [
         {
           name: "Modulul 1 · Caiet de creație 1",
-          weeks: "7 sept – 22 dec 2026",
+          weeks: "săpt. 1–14 (septembrie – decembrie)",
           items: [
             { t: "De azi sunt școlar!", w: "săpt. 1", s: "Evaluare inițială" },
             { t: "Școala piticilor", w: "săpt. 2", s: "Cine sunt eu? · Povestea mărului" },
@@ -104,7 +105,7 @@ window.APP = {
         },
         {
           name: "Modulul 2 · Caiet de creație 2",
-          weeks: "11 ian – 19 feb 2027",
+          weeks: "săpt. 16–21 (ianuarie – februarie)",
           items: [
             { t: "Pic, picătura năzdrăvană", w: "săpt. 16", s: "P, p" },
             { t: "Pinguinul schior", w: "săpt. 17", s: "L, l" },
@@ -116,7 +117,7 @@ window.APP = {
         },
         {
           name: "Modulul 3 · Caiet de creație 3",
-          weeks: "22 feb – 23 apr 2027",
+          weeks: "săpt. 22–28 (martie – aprilie)",
           items: [
             { t: "La pescuit", w: "săpt. 22", s: "Ș, ș" },
             { t: "Flori pentru mama", w: "săpt. 23", s: "F, f" },
@@ -129,12 +130,18 @@ window.APP = {
         },
         {
           name: "Modulul 4 · Caiet de creație 4",
-          weeks: "5 mai – 18 iun 2027",
+          weeks: "săpt. 30–33 (mai)",
           items: [
             { t: "Azor", w: "săpt. 30", s: "Z, z" },
             { t: "O navă extraterestră", w: "săpt. 31", s: "X, x" },
             { t: "O mână de ajutor", w: "săpt. 32", s: "Â, â" },
-            { t: "Super-eroul Rocky · Ziua copiilor", w: "săpt. 33", s: "K, Q, W, Y" },
+            { t: "Super-eroul Rocky · Ziua copiilor", w: "săpt. 33", s: "K, Q, W, Y" }
+          ]
+        },
+        {
+          name: "Modulul 5 · Caiet de creație 5",
+          weeks: "săpt. 34–36 (iunie)",
+          items: [
             { t: "La cumpărături", w: "săpt. 34", s: "Bani · Leul" },
             { t: "La munte · La mare", w: "săpt. 35–36", s: "Recapitulare · Vine vacanța" }
           ]
@@ -142,6 +149,7 @@ window.APP = {
       ]
     },
 
+    /* ---------- CLASA I (REAL, Editura EDU 2026-2027) ---------- */
     1: {
       source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
       orar: [
@@ -209,6 +217,7 @@ window.APP = {
       ]
     },
 
+    /* ---------- CLASA a II-a (REAL, Editura EDU 2026-2027) ---------- */
     2: {
       source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
       orar: [
@@ -277,6 +286,7 @@ window.APP = {
       ]
     },
 
+    /* ---------- CLASA a III-a (REAL, Editura EDU 2026-2027) ---------- */
     3: {
       source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
       orar: [
@@ -362,6 +372,7 @@ window.APP = {
       ]
     },
 
+    /* ---------- CLASA a IV-a (REAL, Editura EDU 2026-2027) ---------- */
     4: {
       source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
       orar: [
