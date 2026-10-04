@@ -41,28 +41,30 @@ h1, h2, h3, h4 {
 
 /* Banda demo */
 .demo-ribbon {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
+  position: relative;
+  z-index: 10;
   background: #111827;
   color: #f9fafb;
   text-align: center;
   font-size: 12.5px;
   padding: 7px 14px;
   letter-spacing: 0.2px;
+  line-height: 1.5;
 }
 .demo-ribbon b { color: #fbbf24; }
 
 /* Topbar */
 .topbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
+  position: sticky;
+  top: 0;
+  z-index: 90;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 28px;
+  padding: 12px 24px;
   pointer-events: none;
+  background: rgba(247, 243, 236, 0.9);
+  backdrop-filter: blur(8px);
 }
 .brand {
   display: flex;
@@ -123,7 +125,7 @@ h1, h2, h3, h4 {
   flex-direction: column;
 }
 .heading {
-  padding: 92px 28px 14px;
+  padding: 26px 24px 14px;
   pointer-events: none;
 }
 .heading h1 { font-size: clamp(26px, 4vw, 44px); }
@@ -245,7 +247,7 @@ h1, h2, h3, h4 {
 .site-clasa { min-height: 100vh; display: flex; flex-direction: column; }
 
 .class-hero {
-  padding: 96px 28px 26px;
+  padding: 26px 24px 26px;
   display: flex;
   align-items: center;
   gap: 20px;
@@ -339,6 +341,34 @@ h1, h2, h3, h4 {
 .subscribe-bar .btn-primary { background: #fbbf24; color: #111827; margin-left: auto; }
 .subscribe-bar .btn-primary:hover { background: #f59e0b; }
 
+.orc-label {
+  margin: 2px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.5;
+}
+.orar { margin: 28px 0 4px; }
+.orar h2 {
+  font-size: 20px; margin: 0 0 12px; display: flex; align-items: center; gap: 10px;
+}
+.orar-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px;
+}
+.orar-item {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.orar-item .od { font-size: 13.5px; font-weight: 600; }
+.orar-item b { font-size: 19px; font-family: var(--font-title); font-weight: 800; }
+.orar-item.total { background: #111827; color: #fff; border-color: #111827; }
+
+.mod-weeks { color: var(--muted); font-size: 13px; margin: -6px 0 14px; }
+.theme {
+  background: #fff; border: 1px solid var(--line);
+  border-left: 4px solid #4f46e5;
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(31,41,55,0.04);
+}
+.theme .theme-title { font-weight: 700; font-size: 15px; }
+.theme .theme-meta { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+
 /* ============================================================
    AUTENTIFICARE
    ============================================================ */
@@ -412,8 +442,9 @@ h1, h2, h3, h4 {
 .password-wrap input { padding-right: 46px; }
 .password-wrap .toggle {
   position: absolute;
-  right: 8px; top: 50%;
+  top: 50%;
   transform: translateY(-50%);
+  right: 8px;
   border: none; background: transparent;
   font-size: 14px; color: var(--muted);
   padding: 6px;
@@ -477,9 +508,21 @@ h1, h2, h3, h4 {
    ============================================================ */
 @media (max-width: 820px) {
   .stage { display: none; }
-  .cards { flex-direction: column; gap: 12px; }
-  .card { min-height: 92px; flex: none; }
+  .cards { flex-direction: column; gap: 12px; padding: 10px 14px 16px; }
+  .card { min-height: 82px; flex: none; gap: 6px; }
+  .card .c-num { font-size: 22px; }
+  .card .c-emoji { font-size: 32px; }
   .site-auth { grid-template-columns: 1fr; }
   .auth-side { display: none; }
-  .class-hero { flex-direction: column; align-items: flex-start; }
+  .auth-main { padding: 24px 18px; }
+  .class-hero { flex-direction: column; align-items: flex-start; padding: 22px 18px; }
+  .clasa-wrap { padding: 10px 18px 70px; }
+  .heading { padding: 20px 18px 12px; }
+  .heading h1 { font-size: 24px; }
+  .heading p { font-size: 14px; }
+  .topbar { padding: 10px 14px; }
+  .brand { font-size: 16px; }
+  .btn { padding: 9px 14px; font-size: 13px; }
+  .subscribe-bar { padding: 20px; }
+  .orar-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 }
