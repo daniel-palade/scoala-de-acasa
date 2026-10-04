@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecție — Școala de Acasă</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="demo-ribbon">🚧 <b>Prototip demonstrativ</b> — activități interactive și teste de aprofundare; conținutul se aliniază programei oficiale (faza P4).</div>
+
+  <div class="site-lectie">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="mark">🎓</span>
+        <span>Școala de Acasă</span>
+      </a>
+      <div class="actions">
+        <a class="btn btn-ghost" id="back-class" href="#">← Înapoi la clasă</a>
+        <a class="btn btn-ghost" href="cont.html">Contul meu</a>
+      </div>
+    </header>
+
+    <section class="l-hero" id="l-hero">
+      <div class="l-emoji" id="l-emoji"></div>
+      <div>
+        <h1 id="l-title"></h1>
+        <p id="l-meta"></p>
+      </div>
+      <div class="l-points">⭐ <span id="l-points">0</span></div>
+    </section>
+
+    <main class="lectie-wrap">
+
+      <!-- TIMER -->
+      <section class="block timer-block">
+        <div class="timer-head">
+          <h2>⏱ Cât timp lucrăm azi</h2>
+          <div class="timer-pill"><span id="timer-display">00:00</span></div>
+        </div>
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="timer-toggle">▶ Începe</button>
+          <button class="btn btn-ghost" id="timer-reset">Resetează</button>
+        </div>
+        <p class="timer-hint">O sesiune bună durează cam 10–15 minute. Nu-i nicio grabă — ritmul este al copilului.</p>
+      </section>
+
+      <!-- ACTIVITATE INTERACTIVĂ -->
+      <section class="block act-block">
+        <h2 id="act-title">🎮 Activitate</h2>
+        <p class="act-sub" id="act-sub"></p>
+        <div id="activity"></div>
+        <div class="act-done" id="act-done" style="display:none">
+          <div class="done-emoji">🎉</div>
+          <p><b>Bravo! Activitatea este gata.</b><br>Ai câștigat <b>+10 puncte</b> pentru oul-mascotă.</p>
+        </div>
+      </section>
+
+      <!-- INDICAȚII PĂRINTE -->
+      <section class="block tips-block">
+        <details class="tips">
+          <summary>👨‍👩‍👧 <b>Pentru părinți</b> — cum îl ajuți cel mai bine <span class="chev">▾</span></summary>
+          <ul id="tips-list"></ul>
+        </details>
+      </section>
+
+      <!-- TEST -->
+      <section class="block quiz-block">
+        <div class="quiz-head">
+          <h2 id="quiz-title">📝 Testul lecției</h2>
+          <div class="quiz-rule">maxim 2 greșeli · reîncercări nelimitate</div>
+        </div>
+        <div id="quiz"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/gamificare.js"></script>
+  <script src="js/continut.js"></script>
+  <script src="js/lectie.js"></script>
+</body>
+</html>
