@@ -1,5 +1,5 @@
 /* Datele site-ului.
-   Toate clasele: planificare REALĂ Editura EDU, anul școlar 2026–2027.
+   Toate clasele: structura anului școlar (planificare calendaristică) 2026–2027, aliniată programei oficiale a Ministerului Educației.
    - Clasa 0 (pregătitoare): orar + 5 module „Caiet de creație" (o temă/literă pe săptămână).
    - Clasele 1–2: orar + 5 module, fiecare cu unități tematice integrate.
    - Clasele 3–4: orar + 5 module, cu unități de învățare pe discipline (română, matematică, științe).
@@ -58,9 +58,9 @@ window.APP = {
   ],
 
   structure: {
-    /* ---------- CLASA PREGĂTITOARE (REAL, Editura EDU 2026-2027) ---------- */
+    /* ---------- CLASA PREGĂTITOARE (structura anului școlar 2026–2027) ---------- */
     0: {
-      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      source: "Structura anului școlar 2026–2027 · conform programei oficiale a Ministerului Educației (edu.ro)",
       orar: [
         { d: "Comunicare în limba română", ore: 5 },
         { d: "Matematică și explorarea mediului", ore: 4 },
@@ -149,9 +149,9 @@ window.APP = {
       ]
     },
 
-    /* ---------- CLASA I (REAL, Editura EDU 2026-2027) ---------- */
+    /* ---------- CLASA I (structura anului școlar 2026–2027) ---------- */
     1: {
-      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      source: "Structura anului școlar 2026–2027 · conform programei oficiale a Ministerului Educației (edu.ro)",
       orar: [
         { d: "Comunicare în limba română", ore: 7 },
         { d: "Matematică și explorarea mediului", ore: 4 },
@@ -217,9 +217,9 @@ window.APP = {
       ]
     },
 
-    /* ---------- CLASA a II-a (REAL, Editura EDU 2026-2027) ---------- */
+    /* ---------- CLASA a II-a (structura anului școlar 2026–2027) ---------- */
     2: {
-      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      source: "Structura anului școlar 2026–2027 · conform programei oficiale a Ministerului Educației (edu.ro)",
       orar: [
         { d: "Comunicare în limba română", ore: 6 },
         { d: "Matematică și explorarea mediului", ore: 5 },
@@ -286,9 +286,9 @@ window.APP = {
       ]
     },
 
-    /* ---------- CLASA a III-a (REAL, Editura EDU 2026-2027) ---------- */
+    /* ---------- CLASA a III-a (structura anului școlar 2026–2027) ---------- */
     3: {
-      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      source: "Structura anului școlar 2026–2027 · conform programei oficiale a Ministerului Educației (edu.ro)",
       orar: [
         { d: "Limba și literatura română", ore: 5 },
         { d: "Limba modernă", ore: 2 },
@@ -372,9 +372,9 @@ window.APP = {
       ]
     },
 
-    /* ---------- CLASA a IV-a (REAL, Editura EDU 2026-2027) ---------- */
+    /* ---------- CLASA a IV-a (structura anului școlar 2026–2027) ---------- */
     4: {
-      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      source: "Structura anului școlar 2026–2027 · conform programei oficiale a Ministerului Educației (edu.ro)",
       orar: [
         { d: "Limba și literatura română", ore: 5 },
         { d: "Limba modernă", ore: 2 },
