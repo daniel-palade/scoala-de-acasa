@@ -1,4 +1,4 @@
-/* Pagina de clasă — afișează structura anului școlar pentru clasa selectată */
+/* Pagina de clasă — afișează orarul + structura anului școlar (pe module sau semestre) */
 
 (function () {
   const APP = window.APP;
@@ -18,7 +18,7 @@
   }
 
   let n = parseInt(qs('n'), 10);
-  if (isNaN(n) || n < 0 || n > 4) n = 1;
+  if (isNaN(n) || n < 0 || n > 4) n = 0;
 
   const cls = APP.classes.find(function (c) { return c.n === n; });
   const struct = APP.structure[n];
@@ -35,16 +35,69 @@
 
   // chips (discipline)
   const chips = document.getElementById('chips');
-  struct.disciplines.forEach(function (d) {
+  (struct.disciplines || []).forEach(function (d) {
     const c = document.createElement('span');
     c.className = 'chip';
     c.textContent = d;
     chips.appendChild(c);
   });
 
-  // semestre + unități
   const cont = document.getElementById('semestre');
-  struct.semestre.forEach(function (sem) {
+
+  // sursa planificării
+  if (struct.source) {
+    const s = document.createElement('p');
+    s.className = 'orc-label';
+    s.innerHTML = '📚 Sursă: <b>' + struct.source + '</b>';
+    cont.appendChild(s);
+  }
+
+  // ORAR (dacă există)
+  if (struct.orar) {
+    const h = document.createElement('h2');
+    h.style.color = cls.color;
+    h.innerHTML = '<span class="dot"></span>Orarul săptămânal';
+    cont.appendChild(h);
+
+    const grid = document.createElement('div');
+    grid.className = 'orar-grid';
+    struct.orar.forEach(function (o) {
+      const item = document.createElement('div');
+      item.className = 'orar-item' + (o.total ? ' total' : '');
+      item.innerHTML = '<span class="od">' + o.d + '</span><b>' + o.ore + '</b>';
+      grid.appendChild(item);
+    });
+    cont.appendChild(grid);
+  }
+
+  // MODULE (clasa pregătitoare etc.)
+  if (struct.modules) {
+    struct.modules.forEach(function (m) {
+      const h = document.createElement('h2');
+      h.style.color = cls.color;
+      h.innerHTML = '<span class="dot"></span>' + m.name;
+      cont.appendChild(h);
+
+      const w = document.createElement('p');
+      w.className = 'mod-weeks';
+      w.textContent = '🗓 ' + m.weeks;
+      cont.appendChild(w);
+
+      m.items.forEach(function (it) {
+        const div = document.createElement('div');
+        div.className = 'theme';
+        div.style.borderLeftColor = cls.color;
+        div.innerHTML =
+          '<div class="theme-title">' + it.t + '</div>' +
+          '<div class="theme-meta">' + it.w + ' · ' + it.s + '</div>';
+        cont.appendChild(div);
+      });
+    });
+    return;
+  }
+
+  // SEMESTRE (clasele 1–4, orientativ)
+  (struct.semestre || []).forEach(function (sem) {
     const h = document.createElement('h2');
     h.style.color = cls.color;
     h.innerHTML = '<span class="dot"></span>' + sem.name;
