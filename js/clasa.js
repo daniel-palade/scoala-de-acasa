@@ -1,4 +1,4 @@
-/* Pagina de clasă — afișează orarul + structura anului școlar (pe module sau semestre) */
+/* Pagina de clasă — afișează orarul + structura anului școlar (pe module) */
 
 (function () {
   const APP = window.APP;
@@ -70,7 +70,7 @@
     cont.appendChild(grid);
   }
 
-  // MODULE (clasa pregătitoare etc.)
+  // MODULE (toate clasele)
   if (struct.modules) {
     struct.modules.forEach(function (m) {
       const h = document.createElement('h2');
@@ -87,37 +87,17 @@
         const div = document.createElement('div');
         div.className = 'theme';
         div.style.borderLeftColor = cls.color;
+        let tagHtml = '';
+        if (it.d) {
+          tagHtml = '<span class="theme-tag" style="background:' + cls.tint + ';color:' + shade(cls.color, -34) + ';">' + it.d + '</span>';
+        }
         div.innerHTML =
-          '<div class="theme-title">' + it.t + '</div>' +
+          '<div class="theme-head">' + tagHtml +
+            '<div class="theme-title">' + it.t + '</div>' +
+          '</div>' +
           '<div class="theme-meta">' + it.w + ' · ' + it.s + '</div>';
         cont.appendChild(div);
       });
     });
-    return;
   }
-
-  // SEMESTRE (clasele 1–4, orientativ)
-  (struct.semestre || []).forEach(function (sem) {
-    const h = document.createElement('h2');
-    h.style.color = cls.color;
-    h.innerHTML = '<span class="dot"></span>' + sem.name;
-    cont.appendChild(h);
-
-    sem.units.forEach(function (u) {
-      const color = cls.color;
-      const det = document.createElement('details');
-      det.className = 'unitcard';
-      det.innerHTML =
-        '<summary>' +
-          '<span>' + u.title + '</span>' +
-          '<span class="chev">▾</span>' +
-        '</summary>' +
-        '<div class="uc-body">' +
-          '<span class="tag" style="background:' + cls.tint + ';color:' + shade(color, -30) + ';">' + u.subject + '</span>' +
-          '<div>' + u.body + '</div>' +
-          '<div class="weeks">🗓 ' + u.weeks + '</div>' +
-        '</div>';
-      cont.appendChild(det);
-    });
-  });
 })();
