@@ -99,6 +99,8 @@
       Store.markLessonDone(KEY);
       Store.addPoints(10);
       refreshPoints();
+    } else {
+      // deja terminată — nu mai adăugăm puncte, dar arătăm confirmarea
     }
   }
 
@@ -117,6 +119,10 @@
     $('act-title').textContent = '🧮 Socotește rapid';
     $('act-sub').textContent = 'Rezolvă fiecare exercițiu și treci mai departe.';
     renderRounds(content.activity);
+  } else if (content.activity.type === 'intrus') {
+    $('act-title').textContent = '🎮 Găsește intrusul';
+    $('act-sub').textContent = 'În fiecare rând, apasă pe ce nu se potrivește cu restul.';
+    renderIntrus(content.activity);
   } else {
     completeActivity();
   }
@@ -162,6 +168,49 @@
     actEl.appendChild(grid);
   }
 
+  function renderIntrus(act) {
+    const box = document.createElement('div');
+    actEl.appendChild(box);
+    let i = 0;
+
+    function draw() {
+      if (i >= act.rounds.length) { setTimeout(completeActivity, 300); return; }
+      const r = act.rounds[i];
+      box.innerHTML = '';
+
+      const prompt = document.createElement('div');
+      prompt.className = 'round-prompt';
+      prompt.innerHTML =
+        '<p style="font-size:17px;font-weight:700;color:var(--ink);margin:0 0 4px;">Care nu se potrivește aici?</p>' +
+        '<p style="color:var(--muted);font-size:14px;margin:0;">Indiciu: toate celelalte sunt <b>' + r.hint + '</b>.</p>';
+      box.appendChild(prompt);
+
+      const grid = document.createElement('div');
+      grid.className = 'word-grid';
+      r.items.forEach(function (item, idx) {
+        const b = document.createElement('button');
+        b.className = 'word-card';
+        b.innerHTML = '<span class="wc-emoji">' + item[1] + '</span><span class="wc-word">' + item[0] + '</span>';
+        b.addEventListener('click', function () {
+          if (grid.dataset.done) return;
+          grid.dataset.done = '1';
+          const ok = idx === r.odd;
+          if (ok) {
+            b.classList.add('ok');
+          } else {
+            b.classList.add('no');
+            grid.querySelectorAll('.word-card')[r.odd].classList.add('ok');
+          }
+          setTimeout(function () { i++; draw(); }, 900);
+        });
+        grid.appendChild(b);
+      });
+      box.appendChild(grid);
+    }
+
+    draw();
+  }
+
   function renderRounds(act) {
     const rounds = act.rounds;
     let i = 0;
@@ -195,6 +244,7 @@
           const ok = String(val) === String(r.ans);
           b.classList.add(ok ? 'ok' : 'no');
           if (!ok) {
+            // evidențiem răspunsul corect
             opts.querySelectorAll('.opt').forEach(function (ob) {
               if (String(ob.textContent) === String(r.ans)) ob.classList.add('ok');
             });
@@ -215,6 +265,7 @@
         if (d < 0) continue;
         if (set.indexOf(d) === -1) set.push(d);
       }
+      // amestecăm
       for (let k = set.length - 1; k > 0; k--) {
         const j = Math.floor(Math.random() * (k + 1));
         const t = set[k]; set[k] = set[j]; set[j] = t;
@@ -235,6 +286,7 @@
   const MAX_WRONG = 2;
 
   function buildQuiz() {
+    // curățăm
     quizEl.innerHTML = '';
     let qi = 0, wrong = 0, locked = false;
     const questions = content.quiz;
