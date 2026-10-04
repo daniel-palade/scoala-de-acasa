@@ -1,6 +1,6 @@
 /* Continut educațional — dicționar de litere, indicații pentru părinți,
    bănci de întrebări și activități interactive. Conținut demo, corect pedagogic,
-   care se înlocuiește/completează conform programei oficiale (edu.ro) în faza P4. */
+   care se înlocuiește/completează conform programei oficiale (edu.ro). */
 
 window.CONTENT = (function () {
   // ---------- Dicționar literă → cuvinte uzuale (clasa 0) ----------
@@ -142,6 +142,42 @@ window.CONTENT = (function () {
     ]
   };
 
+  // ---------- Bancă de întrebări pentru limba română (clasele 1–4) ----------
+  const RO_BANK = {
+    1: [
+      { q: 'Cu ce literă începe cuvântul „casă"?', o: ['M', 'C', 'T', 'R'], c: 1 },
+      { q: 'Câte litere are cuvântul „mama"?', o: ['2', '3', '4', '5'], c: 2 },
+      { q: 'Care cuvânt începe cu litera „A"?', o: ['Masă', 'Avion', 'Tren', 'Ușă'], c: 1 },
+      { q: 'Câte silabe are „pisică" (pi-si-că)?', o: ['2', '3', '4', '5'], c: 1 },
+      { q: 'Care este prima literă a alfabetului?', o: ['Z', 'M', 'B', 'A'], c: 3 },
+      { q: 'Care cuvânt începe cu litera „M"?', o: ['Pară', 'Măr', 'Casă', 'Nor'], c: 1 }
+    ],
+    2: [
+      { q: 'Care cuvânt este scris corect?', o: ['copil', 'cobil', 'pocil', 'lopci'], c: 0 },
+      { q: 'Care este opusul cuvântului „mare"?', o: ['înalt', 'mic', 'lung', 'gros'], c: 1 },
+      { q: 'Care cuvânt rimează cu „soare"?', o: ['casă', 'floare', 'masă', 'carte'], c: 1 },
+      { q: 'Câte litere are alfabetul limbii române?', o: ['26', '30', '31', '28'], c: 2 },
+      { q: '„Pisica a prins șoarecele." Cine a prins?', o: ['Șoarecele', 'Pisica', 'Câinele', 'Nimeni'], c: 1 },
+      { q: 'Care cuvânt are 3 silabe?', o: ['casă', 'masă', 'papucă', 'cal'], c: 2 }
+    ],
+    3: [
+      { q: 'Ce parte de vorbire este „aleargă"?', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1 },
+      { q: 'În „Câinele latră", care este substantivul?', o: ['latră', 'câinele', 'și', 'un'], c: 1 },
+      { q: 'Care cuvânt este adjectiv?', o: ['frumos', 'carte', 'aleargă', 'el'], c: 0 },
+      { q: '„Eu (a merge) ieri la școală." Forma corectă este:', o: ['am mers', 'am merse', 'oi merge', 'merg'], c: 0 },
+      { q: 'Care este pluralul cuvântului „copil"?', o: ['copii', 'copiii', 'copiluri', 'copile'], c: 0 },
+      { q: 'Care cuvânt este sinonim cu „vesel"?', o: ['trist', 'bucuros', 'supărat', 'liniștit'], c: 1 }
+    ],
+    4: [
+      { q: 'Care este subiectul din propoziția „Maria citește"?', o: ['citește', 'Maria', 'o', 'poveste'], c: 1 },
+      { q: 'Care este predicatul din „Elevul scrie"?', o: ['Elevul', 'scrie', 'tema', 'în'], c: 1 },
+      { q: 'Care cuvânt este pronume?', o: ['frumos', 'el', 'aleargă', 'floare'], c: 1 },
+      { q: 'Care este opusul cuvântului „harnic"?', o: ['silitor', 'lenes', 'viteaz', 'blând'], c: 1 },
+      { q: 'Care propoziție este scrisă corect?', o: ['Eu sa dus.', 'Eu s-a dus.', 'Eu s-au dus.', 'Eu m-am dus.'], c: 3 },
+      { q: '„a alerga" este un…', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1 }
+    ]
+  };
+
   // construiește o întrebare cu răspunsul corect marcat după amestecare
   function mk(q, options, correctValue) {
     const o = shuffle(options);
@@ -162,9 +198,13 @@ window.CONTENT = (function () {
     const distractors = pickDistractors(letter, 4);
     const qs = [];
 
+    // 1) care este litera
     qs.push(mk('Care este litera „' + letter + '" ?', [letter, other[0], other[1], other[2]], letter));
+
+    // 2) care cuvânt conține litera
     qs.push(mk('Care cuvânt conține litera „' + letter + '" ?', [first, distractors[0], distractors[1], distractors[2]], first));
 
+    // 3) început sau apariții
     if (first.charAt(0).toLowerCase() === lower) {
       qs.push(mk('Cu ce literă începe cuvântul „' + first + '" ?', [letter, other[0], other[1], other[2]], letter));
     } else {
@@ -174,13 +214,16 @@ window.CONTENT = (function () {
         String(cnt)));
     }
 
+    // 4) câte litere are
     const len = first.length;
     qs.push(mk('Câte litere are cuvântul „' + first + '" ?',
       [String(len), String(len + 1), String(Math.max(1, len - 1)), String(len + 2)], String(len)));
 
+    // 5) care NU conține litera
     qs.push(mk('Care cuvânt NU conține litera „' + letter + '" ?',
       [distractors[0], first, words[1][0], words[2][0]], distractors[0]));
 
+    // 6) întrebare generală (stabilă per lecție)
     qs.push(QUIZ_BANK[0][hash(letter) % QUIZ_BANK[0].length]);
 
     return qs;
@@ -244,6 +287,42 @@ window.CONTENT = (function () {
     return { a: a, b: b, op: op, ans: ans };
   }
 
+  // ---------- Indicații specifice pentru limba română (clasele 3–4) ----------
+  const RO_TIPS = {
+    3: [
+      'La română, clasa a III-a aduce părțile de vorbire: joacă „ghicește ce e" (substantiv = ființă/lucru, verb = acțiune, adjectiv = însușire).',
+      'Citiți împreună un text scurt, apoi puneți 2–3 întrebări simple: „cine?", „ce a făcut?", „unde?".',
+      'Încurajează-l să scrie zilnic 2–3 propoziții despre ce a trăit — fără să insistăm pe greșeli.'
+    ],
+    4: [
+      'Clasa a IV-a pregătește compunerile: faceți împreună un „plan de idei" înainte de a scrie (cine, ce, unde, când).',
+      'La ortograme, exersați cu exemple din vorbirea de zi cu zi, nu doar din manual.',
+      'Lasă-l să-și recitească textul cu voce tare — își prinde singur multe greșeli.'
+    ]
+  };
+
+  // ---------- activitate „intrus" (găsește ce nu se potrivește) ----------
+  const INTRUS_SETS = [
+    { items: [['măr', '🍎'], ['banană', '🍌'], ['pară', '🍐'], ['scaun', '🪑']], odd: 3, hint: 'fructele' },
+    { items: [['pisică', '🐱'], ['câine', '🐶'], ['iepure', '🐰'], ['avion', '✈️']], odd: 3, hint: 'animalele' },
+    { items: [['roșu', '🔴'], ['albastru', '🔵'], ['verde', '🟢'], ['minge', '⚽']], odd: 3, hint: 'culorile' },
+    { items: [['floare', '🌸'], ['copac', '🌳'], ['iarbă', '🌱'], ['telefon', '📱']], odd: 3, hint: 'plantele' },
+    { items: [['iarnă', '❄️'], ['vară', '☀️'], ['toamnă', '🍂'], ['carte', '📖']], odd: 3, hint: 'anotimpurile' },
+    { items: [['tren', '🚂'], ['mașină', '🚗'], ['autobuz', '🚌'], ['pantof', '👟']], odd: 3, hint: 'mijloacele de transport' }
+  ];
+
+  function intrusActivity() {
+    const sets = shuffle(INTRUS_SETS).slice(0, 4);
+    return {
+      type: 'intrus',
+      rounds: sets.map(function (s) {
+        const oddItem = s.items[s.odd];
+        const shuffled = shuffle(s.items);
+        return { items: shuffled, odd: shuffled.indexOf(oddItem), hint: s.hint };
+      })
+    };
+  }
+
   // ---------- API principal ----------
   function get(n, item) {
     const letter = letterOf(item);
@@ -266,12 +345,23 @@ window.CONTENT = (function () {
       activity = numaraActivity(0);
     } else if (n <= 2) {
       parent = TIPS_BASE[n];
-      quiz = pickQuiz(n, 8);
+      quiz = mixQuiz(n, 8);
       activity = numaraActivity(n);
     } else {
-      parent = TIPS_BASE[n];
-      quiz = pickQuiz(n, 8);
-      activity = (item.d === 'Matematică') ? flashActivity(n) : numaraActivity(n);
+      const disc = (item.d || '').toLowerCase();
+      if (disc.indexOf('rom') === 0) {
+        parent = (RO_TIPS[n] || []).concat(TIPS_BASE[n].slice(0, 1));
+        quiz = pickFrom(RO_BANK[n], 6);
+        activity = intrusActivity();
+      } else if (disc.indexOf('mat') === 0) {
+        parent = TIPS_BASE[n];
+        quiz = pickQuiz(n, 8);
+        activity = flashActivity(n);
+      } else {
+        parent = TIPS_BASE[n];
+        quiz = pickQuiz(n, 8);
+        activity = numaraActivity(n);
+      }
     }
 
     return { parent: parent, quiz: quiz, activity: activity, letter: letter };
@@ -279,6 +369,19 @@ window.CONTENT = (function () {
 
   function pickQuiz(cls, k) {
     return shuffle(QUIZ_BANK[cls].slice()).slice(0, k);
+  }
+
+  function pickFrom(bank, k) {
+    return shuffle(bank.slice()).slice(0, k);
+  }
+
+  // quiz mixt (matematică + română) pentru unitățile tematice integrate (clasele 1–2)
+  function mixQuiz(cls, k) {
+    const halfMath = Math.ceil(k / 2);
+    const halfRo = k - halfMath;
+    const math = shuffle(QUIZ_BANK[cls].slice()).slice(0, halfMath);
+    const ro = shuffle((RO_BANK[cls] || []).slice()).slice(0, halfRo);
+    return shuffle(math.concat(ro));
   }
 
   // ---------- helperi ----------
