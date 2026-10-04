@@ -1,7 +1,9 @@
-/* Contul — profil copil + mascota (ou) + puncte. Demo localStorage. */
+/* Contul — profil copil + mascotă (ou→rață) + puncte. Demo localStorage; gamificare în gamificare.js. */
 
 (function () {
   const APP = window.APP;
+  const Store = window.Store;
+  const Gam = window.Gamification;
   const $ = function (id) { return document.getElementById(id); };
 
   function getSession() {
@@ -11,10 +13,6 @@
   function getChild() {
     try { return JSON.parse(localStorage.getItem('sdh_child') || 'null'); }
     catch (e) { return null; }
-  }
-  function getPoints() {
-    const v = parseInt(localStorage.getItem('sdh_points') || '0', 10);
-    return isNaN(v) ? 0 : v;
   }
   function saveChild(c) { localStorage.setItem('sdh_child', JSON.stringify(c)); }
 
@@ -91,50 +89,31 @@
       '<b>' + sexLabel + '</b> · ' + (cls ? cls.title : '') +
       '<br>Vârsta: ' + c.varsta + ' ani · An școlar: ' + c.an;
 
-    $('m-points').textContent = getPoints();
+    const points = Store.points();
+    $('m-points').textContent = points;
     $('go-class').setAttribute('href', 'clasa.html?n=' + c.clasa);
     $('go-class').textContent = 'Începe învățarea în ' + (cls ? cls.short : 'clasă') + ' →';
 
-    renderEgg(c.sex);
+    renderEgg(c.sex, points);
+    renderProgress(points);
   }
 
-  function renderEgg(sex) {
-    const stage = $('egg-stage');
-    const boy = sex === 'baiat';
-    const accs = boy ? ['⚽', '🥅', '👟'] : ['🌸', '🌼', '🦋'];
-    stage.innerHTML =
-      '<span class="egg-acc a1">' + accs[0] + '</span>' +
-      '<span class="egg-acc a2">' + accs[1] + '</span>' +
-      '<span class="egg-acc a3">' + accs[2] + '</span>' +
-      eggSVG(sex);
+  function renderEgg(sex, points) {
+    Gam.render($('egg-stage'), sex, points);
   }
 
-  function eggSVG(sex) {
-    const boy = sex === 'baiat';
-    const mid = boy ? '#a5d6ff' : '#ffc2d9';
-    const edge = boy ? '#3b82f6' : '#ec4899';
-    const acc = boy
-      ? '<path d="M60 86 A50 50 0 0 1 160 86 L160 70 A50 50 0 0 0 60 70 Z" fill="#3b82f6"/>' +
-        '<rect x="58" y="54" width="104" height="12" rx="6" fill="#2563eb"/>'
-      : '<path d="M110 54 l-22 -15 l13 19 Z" fill="#ec4899"/>' +
-        '<path d="M110 54 l22 -15 l-13 19 Z" fill="#ec4899"/>' +
-        '<circle cx="110" cy="54" r="7" fill="#be185d"/>';
-    return '<svg class="egg-svg" viewBox="0 0 220 270" role="img" aria-label="Oul mascotă">' +
-      '<defs><linearGradient id="eG" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="' + mid + '"/></linearGradient></defs>' +
-      '<ellipse cx="72" cy="135" rx="8" ry="10" fill="' + mid + '" opacity="0.5"/>' +
-      '<ellipse cx="152" cy="122" rx="7" ry="9" fill="' + mid + '" opacity="0.45"/>' +
-      '<ellipse cx="132" cy="232" rx="8" ry="10" fill="' + mid + '" opacity="0.4"/>' +
-      '<ellipse cx="62" cy="195" rx="6" ry="8" fill="' + mid + '" opacity="0.4"/>' +
-      '<ellipse cx="110" cy="150" rx="80" ry="100" fill="url(#eG)" stroke="' + edge + '" stroke-width="3"/>' +
-      '<circle cx="82" cy="155" r="11" fill="#fda4af" opacity="0.75"/>' +
-      '<circle cx="138" cy="155" r="11" fill="#fda4af" opacity="0.75"/>' +
-      '<circle cx="88" cy="132" r="7.5" fill="#1f2937"/>' +
-      '<circle cx="132" cy="132" r="7.5" fill="#1f2937"/>' +
-      '<circle cx="90" cy="130" r="2.8" fill="#fff"/>' +
-      '<circle cx="134" cy="130" r="2.8" fill="#fff"/>' +
-      '<path d="M100 160 Q110 174 120 160" stroke="#1f2937" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
-      acc +
-      '</svg>';
+  function renderProgress(points) {
+    const stage = Gam.stageFor(points);
+    const st = Gam.STAGES[stage];
+    const next = Gam.nextStage(points);
+    const el = $('egg-progress');
+    let html = '<span class="stage-name">' + st.name + '</span> · ' + st.desc;
+    if (next) {
+      html += '<br><span class="stage-next">Pentru următoarea etapă („' + next.name + '") mai ai nevoie de ' + next.need + ' puncte.</span>';
+    } else {
+      html += '<br><span class="stage-next">🎉 Rățușca a crescut complet — e gata de joacă!</span>';
+    }
+    const bar = '<div class="egg-bar-wrap"><div class="egg-bar" style="width:' + (stage < Gam.STAGES.length - 1 ? Math.min(100, Math.round(points * 100 / Gam.STAGES[stage + 1].min)) : 100) + '%"></div></div>';
+    el.innerHTML = html + bar;
   }
 })();

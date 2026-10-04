@@ -1,4 +1,4 @@
-/* Pagina de clasă — afișează orarul + structura anului școlar (pe module) */
+/* Pagina de clasă — afișează orarul + structura anului școlar (pe module sau semestre) */
 
 (function () {
   const APP = window.APP;
@@ -15,6 +15,10 @@
     const G = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amt));
     const B = Math.max(0, Math.min(255, (num & 0x0000FF) + amt));
     return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+  }
+
+  function openLesson(title) {
+    window.location.href = 'lectie.html?n=' + n + '&t=' + encodeURIComponent(title);
   }
 
   let n = parseInt(qs('n'), 10);
@@ -70,7 +74,7 @@
     cont.appendChild(grid);
   }
 
-  // MODULE (toate clasele)
+  // MODULE (clasa pregătitoare etc.)
   if (struct.modules) {
     struct.modules.forEach(function (m) {
       const h = document.createElement('h2');
@@ -85,7 +89,10 @@
 
       m.items.forEach(function (it) {
         const div = document.createElement('div');
-        div.className = 'theme';
+        div.className = 'theme theme-link';
+        div.setAttribute('role', 'button');
+        div.setAttribute('tabindex', '0');
+        div.setAttribute('aria-label', 'Deschide lecția ' + it.t);
         div.style.borderLeftColor = cls.color;
         let tagHtml = '';
         if (it.d) {
@@ -94,10 +101,41 @@
         div.innerHTML =
           '<div class="theme-head">' + tagHtml +
             '<div class="theme-title">' + it.t + '</div>' +
+            '<span class="theme-open">Deschide lecția →</span>' +
           '</div>' +
           '<div class="theme-meta">' + it.w + ' · ' + it.s + '</div>';
+        div.addEventListener('click', function () { openLesson(it.t); });
+        div.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLesson(it.t); }
+        });
         cont.appendChild(div);
       });
     });
+    return;
   }
+
+  // SEMESTRE (clasele 1–4, orientativ)
+  (struct.semestre || []).forEach(function (sem) {
+    const h = document.createElement('h2');
+    h.style.color = cls.color;
+    h.innerHTML = '<span class="dot"></span>' + sem.name;
+    cont.appendChild(h);
+
+    sem.units.forEach(function (u) {
+      const color = cls.color;
+      const det = document.createElement('details');
+      det.className = 'unitcard';
+      det.innerHTML =
+        '<summary>' +
+          '<span>' + u.title + '</span>' +
+          '<span class="chev">▾</span>' +
+        '</summary>' +
+        '<div class="uc-body">' +
+          '<span class="tag" style="background:' + cls.tint + ';color:' + shade(color, -30) + ';">' + u.subject + '</span>' +
+          '<div>' + u.body + '</div>' +
+          '<div class="weeks">🗓 ' + u.weeks + '</div>' +
+        '</div>';
+      cont.appendChild(det);
+    });
+  });
 })();
