@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Școala de Acasă — alege clasa copilului tău</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="demo-ribbon">🚧 <b>Prototip demonstrativ</b> — conținutul educațional este exemplu; se înlocuiește cu planificarea oficială a Ministerului Educației.</div>
+
+  <div class="site-home">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="mark">🎓</span>
+        <span>Școala de Acasă</span>
+      </a>
+      <div class="actions">
+        <a class="btn btn-ghost" href="autentificare.html">Contul meu</a>
+        <a class="btn btn-primary" href="autentificare.html">Creează cont</a>
+      </div>
+    </header>
+
+    <div class="heading">
+      <h1>Ce se face la școală, săptămână de săptămână</h1>
+      <p>Alege clasa copilului tău și vezi cum îl poți ajuta acasă.</p>
+    </div>
+
+    <main class="cards" id="cards">
+      <!-- cardurile sunt generate din data.js -->
+    </main>
+
+    <p class="footnote">Treci cu mouse-ul peste o clasă ca s-o explorezi · dă click pentru structura anului școlar</p>
+  </div>
+
+  <!-- Stratul expandat (morph) -->
+  <div class="stage" id="stage">
+    <div class="s-emoji" id="s-emoji"></div>
+    <div class="s-num" id="s-num"></div>
+    <p class="s-desc" id="s-desc"></p>
+    <button class="s-cta" id="s-cta">Intră în clasă →</button>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
