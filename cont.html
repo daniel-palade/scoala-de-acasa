@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contul meu — Școala de Acasă</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="demo-ribbon">🚧 <b>Prototip demonstrativ</b> — contul și progresul se salvează local în browser; autentificarea reală (cod pe e-mail) se leagă de un backend.</div>
+
+  <div class="site-cont">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="mark">🎓</span>
+        <span>Școala de Acasă</span>
+      </a>
+      <div class="actions">
+        <a class="btn btn-ghost" href="index.html">Înapoi la clase</a>
+        <a class="btn btn-ghost" id="logout">Ieșire</a>
+      </div>
+    </header>
+
+    <!-- PROFIL COPIL (prima dată) -->
+    <main class="cont-wrap" id="form-view">
+      <div class="cont-head">
+        <h1>Să ne cunoaștem!</h1>
+        <p>Completează datele copilului și primești <b>oul-mascotă</b> care va crește cu el tot anul școlar.</p>
+      </div>
+      <div class="step-card">
+        <h2>Despre copilul tău</h2>
+        <p class="sub">Aceste date ne ajută să-ți afișăm exact clasa și conținutul potrivit.</p>
+        <form id="child-form" novalidate>
+          <div class="field">
+            <label for="c-name">Prenumele copilului</label>
+            <input type="text" id="c-name" placeholder="Ex: Andrei" autocomplete="off" />
+          </div>
+
+          <label class="field-label">Sexul copilului · alege oul potrivit</label>
+          <div class="sex-picker">
+            <label class="sex-option boy">
+              <input type="radio" name="sex" value="baiat" />
+              <span class="sex-emoji">🥚</span>
+              <span>
+                <span class="sex-label">Băiat</span>
+                <span class="sex-hint">oul albastru · minge de fotbal ⚽</span>
+              </span>
+            </label>
+            <label class="sex-option girl">
+              <input type="radio" name="sex" value="fata" />
+              <span class="sex-emoji">🥚</span>
+              <span>
+                <span class="sex-label">Fată</span>
+                <span class="sex-hint">oul roz · flori 🌸</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="c-clasa">Clasa</label>
+              <select id="c-clasa"></select>
+            </div>
+            <div class="field">
+              <label for="c-varsta">Vârsta (ani)</label>
+              <input type="number" id="c-varsta" min="5" max="12" placeholder="Ex: 7" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="c-an">An școlar</label>
+            <select id="c-an">
+              <option value="2026–2027" selected>2026–2027</option>
+              <option value="2027–2028">2027–2028</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Creează oul-mascotă 🐣</button>
+        </form>
+      </div>
+    </main>
+
+    <!-- DASHBOARD (după completare) -->
+    <main class="cont-wrap dashboard" id="dash-view" style="display:none">
+      <div class="cont-head">
+        <h1 id="dash-hello">Bine ai venit!</h1>
+        <p>Iată oul copilului — va crește cu fiecare lecție terminată.</p>
+      </div>
+      <div class="child-card">
+        <div class="egg-stage" id="egg-stage"></div>
+        <div class="child-meta">
+          <h3 id="m-name"></h3>
+          <div class="meta" id="m-meta"></div>
+        </div>
+      </div>
+      <div class="points-box">⭐ <span id="m-points">0</span> puncte</div>
+      <p class="egg-progress" id="egg-progress">
+        Oul este la început. Termină lecții și teste ca să aduni puncte — la finalul anului se transformă într-o rățușcă veselă!
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" id="go-class" href="#">Începe învățarea →</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/cont.js"></script>
+</body>
+</html>

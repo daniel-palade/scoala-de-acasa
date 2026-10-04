@@ -85,7 +85,7 @@
     saveUsers(users);
     setSession(user);
     showMsg('Cont creat cu succes! Vei fi redirecționat…', true);
-    setTimeout(function () { window.location.href = 'index.html'; }, 1100);
+    setTimeout(function () { window.location.href = 'cont.html'; }, 1100);
   });
 
   // AUTENTIFICARE
@@ -104,7 +104,7 @@
     }
     setSession(user);
     showMsg('Bine ai venit, ' + user.name.split(' ')[0] + '! Redirecționare…', true);
-    setTimeout(function () { window.location.href = 'index.html'; }, 900);
+    setTimeout(function () { window.location.href = 'cont.html'; }, 900);
   });
 
   // Google (demo)
@@ -115,9 +115,9 @@
     showMsg('Înregistrarea cu Google este disponibilă după conectarea backend-ului (demo).', false);
   });
 
-  // dacă e deja logat, afișăm un indiciu pe home (opțional)
+  // dacă e deja logat, mergem direct la cont
   const session = localStorage.getItem('sdh_session');
   if (session) {
-    // nu facem redirect automat, doar dăm un semnal discret în consolă/nav
+    window.location.href = 'cont.html';
   }
 })();
