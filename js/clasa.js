@@ -21,6 +21,38 @@
     window.location.href = 'lectie.html?n=' + n + '&t=' + encodeURIComponent(title);
   }
 
+  function renderPrograma(n, cls) {
+    const data = window.PROGRAMA && window.PROGRAMA.classes[n];
+    const host = document.getElementById('programa');
+    if (!data || !host) return;
+
+    const h = document.createElement('h2');
+    h.style.color = cls.color;
+    h.innerHTML = '<span class="dot"></span>Programa oficială · Ministerul Educației';
+    host.appendChild(h);
+
+    data.discipline.forEach(function (d) {
+      const card = document.createElement('details');
+      card.className = 'progcard';
+      card.innerHTML =
+        '<summary><span class="pc-emoji">' + d.emoji + '</span>' +
+        '<span class="pc-name">' + d.nume + '</span>' +
+        '<span class="chev">▾</span></summary>' +
+        '<div class="pc-body">' +
+          '<div class="pc-label">Ce ar trebui să poată face copilul (competențe)</div>' +
+          '<ul class="pc-list">' + d.competente.map(function (c) { return '<li>' + c + '</li>'; }).join('') + '</ul>' +
+          '<div class="pc-label">Ce se învață (conținuturi)</div>' +
+          '<ul class="pc-list pc-con">' + d.continuturi.map(function (c) { return '<li>' + c + '</li>'; }).join('') + '</ul>' +
+        '</div>';
+      host.appendChild(card);
+    });
+
+    const note = document.createElement('p');
+    note.className = 'prog-note';
+    note.innerHTML = '📄 Sursă: <b>' + window.PROGRAMA.sursa + '</b>. ' + window.PROGRAMA.acte.join(' ');
+    host.appendChild(note);
+  }
+
   let n = parseInt(qs('n'), 10);
   if (isNaN(n) || n < 0 || n > 4) n = 0;
 
@@ -111,6 +143,8 @@
         cont.appendChild(div);
       });
     });
+
+    renderPrograma(n, cls);
     return;
   }
 
