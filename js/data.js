@@ -1,7 +1,9 @@
 /* Datele site-ului.
-   - Clasa 0 (pregătitoare): planificare REALĂ Editura EDU, anul școlar 2026–2027 (pe module).
-   - Clasele 1–4: structura disciplinelor conform planului-cadru oficial; unitățile sunt orientative
-     și urmează să fie importate la fel din planificările Editura EDU. */
+   Toate clasele: planificare REALĂ Editura EDU, anul școlar 2026–2027.
+   - Clasa 0 (pregătitoare): orar + 5 module „Caiet de creație" (o temă/literă pe săptămână).
+   - Clasele 1–2: orar + 5 module, fiecare cu unități tematice integrate.
+   - Clasele 3–4: orar + 5 module, cu unități de învățare pe disciplines (română, matematică, științe).
+   Perioadele modulelor respectă structura oficială a anului școlar 2026–2027 (Ministerul Educației). */
 
 window.APP = {
   brand: "Școala de Acasă",
@@ -82,7 +84,7 @@ window.APP = {
       modules: [
         {
           name: "Modulul 1 · Caiet de creație 1",
-          weeks: "săpt. 1–14 (septembrie – decembrie)",
+          weeks: "7 sept – 22 dec 2026",
           items: [
             { t: "De azi sunt școlar!", w: "săpt. 1", s: "Evaluare inițială" },
             { t: "Școala piticilor", w: "săpt. 2", s: "Cine sunt eu? · Povestea mărului" },
@@ -102,7 +104,7 @@ window.APP = {
         },
         {
           name: "Modulul 2 · Caiet de creație 2",
-          weeks: "săpt. 16–21 (ianuarie – februarie)",
+          weeks: "11 ian – 19 feb 2027",
           items: [
             { t: "Pic, picătura năzdrăvană", w: "săpt. 16", s: "P, p" },
             { t: "Pinguinul schior", w: "săpt. 17", s: "L, l" },
@@ -114,7 +116,7 @@ window.APP = {
         },
         {
           name: "Modulul 3 · Caiet de creație 3",
-          weeks: "săpt. 22–28 (martie – aprilie)",
+          weeks: "22 feb – 23 apr 2027",
           items: [
             { t: "La pescuit", w: "săpt. 22", s: "Ș, ș" },
             { t: "Flori pentru mama", w: "săpt. 23", s: "F, f" },
@@ -127,18 +129,12 @@ window.APP = {
         },
         {
           name: "Modulul 4 · Caiet de creație 4",
-          weeks: "săpt. 30–33 (mai)",
+          weeks: "5 mai – 18 iun 2027",
           items: [
             { t: "Azor", w: "săpt. 30", s: "Z, z" },
             { t: "O navă extraterestră", w: "săpt. 31", s: "X, x" },
             { t: "O mână de ajutor", w: "săpt. 32", s: "Â, â" },
-            { t: "Super-eroul Rocky · Ziua copiilor", w: "săpt. 33", s: "K, Q, W, Y" }
-          ]
-        },
-        {
-          name: "Modulul 5 · Caiet de creație 5",
-          weeks: "săpt. 34–36 (iunie)",
-          items: [
+            { t: "Super-eroul Rocky · Ziua copiilor", w: "săpt. 33", s: "K, Q, W, Y" },
             { t: "La cumpărături", w: "săpt. 34", s: "Bani · Leul" },
             { t: "La munte · La mare", w: "săpt. 35–36", s: "Recapitulare · Vine vacanța" }
           ]
@@ -147,7 +143,18 @@ window.APP = {
     },
 
     1: {
-      source: "Plan-cadru oficial · anul școlar 2026–2027 (structura detaliată se va importa din planificarea Editura EDU)",
+      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      orar: [
+        { d: "Comunicare în limba română", ore: 7 },
+        { d: "Matematică și explorarea mediului", ore: 4 },
+        { d: "Limba modernă", ore: 1 },
+        { d: "Religie", ore: 1 },
+        { d: "Arte vizuale și abilități practice", ore: 2 },
+        { d: "Muzică și mișcare", ore: 2 },
+        { d: "Educație fizică", ore: 2 },
+        { d: "Dezvoltare personală", ore: 1 },
+        { d: "Total ore / săptămână", ore: 20, total: true }
+      ],
       disciplines: [
         "Comunicare în limba română",
         "Matematică și explorarea mediului",
@@ -158,23 +165,63 @@ window.APP = {
         "Dezvoltare personală",
         "Religie"
       ],
-      semestre: [
-        { name: "Semestrul I", units: [
-          { title: "Litere și sunete (a, m, i, u, n, r)", weeks: "săpt. 1–8", subject: "Comunicare în limba română", body: "Recunoașterea și scrierea literelor, citirea silabelor." },
-          { title: "Numerele naturale 0–10", weeks: "săpt. 9–12", subject: "Matematică și explorarea mediului", body: "Numărare, comparare, adunări mici." },
-          { title: "Numerele 0–31 și măsurători simple", weeks: "săpt. 13–16", subject: "Matematică și explorarea mediului", body: "Extindere, bani, unități de lungime neconvenționale." }
-        ]},
-        { name: "Semestrul II", units: [
-          { title: "Lectură fluentă și scriere de propoziții", weeks: "săpt. 17–24", subject: "Comunicare în limba română", body: "Citit cursiv, propoziții simple, despărțire în silabe." },
-          { title: "Numerele 0–100", weeks: "săpt. 25–28", subject: "Matematică și explorarea mediului", body: "Zeci și unități, ordine, compunere și descompunere." },
-          { title: "Adunarea și scăderea până la 100 (fără trecere)", weeks: "săpt. 29–33", subject: "Matematică și explorarea mediului", body: "Operații pe baza materialului concret, probleme simple." },
-          { title: "Plante și animale din jurul nostru", weeks: "săpt. 34–35", subject: "Științe", body: "Observare și descriere a mediului apropiat." }
-        ]}
+      modules: [
+        {
+          name: "Modulul 1",
+          weeks: "7 sept – 23 oct 2026",
+          items: [
+            { t: "Din nou la școală", w: "7–25 sept", s: "3 săptămâni" },
+            { t: "Universul meu", w: "28 sept – 23 oct", s: "4 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 2",
+          weeks: "2 nov – 22 dec 2026",
+          items: [
+            { t: "Toți cei mici, la bunici", w: "2–20 nov", s: "3 săptămâni" },
+            { t: "Călătorie în lumea poveștilor", w: "23 nov – 15 dec", s: "4 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 3",
+          weeks: "11 ian – 19 feb 2027",
+          items: [
+            { t: "Prietenie", w: "11–29 ian", s: "3 săptămâni" },
+            { t: "În lumea plantelor", w: "1–19 feb", s: "3 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 4",
+          weeks: "1 mar – 23 apr 2027",
+          items: [
+            { t: "În lumea animalelor", w: "1–26 mar", s: "4 săptămâni" },
+            { t: "Poveștile pământului", w: "29 mar – 16 apr", s: "3 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 5",
+          weeks: "5 mai – 18 iun 2027",
+          items: [
+            { t: "Cântec, joc și voie bună", w: "5–21 mai", s: "3 săptămâni" },
+            { t: "Se apropie vacanța · Recapitulare finală", w: "24 mai – 18 iun", s: "4 săptămâni" }
+          ]
+        }
       ]
     },
 
     2: {
-      source: "Plan-cadru oficial · anul școlar 2026–2027 (structura detaliată se va importa din planificarea Editura EDU)",
+      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      orar: [
+        { d: "Comunicare în limba română", ore: 6 },
+        { d: "Matematică și explorarea mediului", ore: 5 },
+        { d: "Limba modernă", ore: 1 },
+        { d: "Religie", ore: 1 },
+        { d: "Arte vizuale și abilități practice", ore: 2 },
+        { d: "Muzică și mișcare", ore: 2 },
+        { d: "Educație fizică", ore: 2 },
+        { d: "Dezvoltare personală", ore: 1 },
+        { d: "Total ore / săptămână", ore: 20, total: true }
+      ],
       disciplines: [
         "Comunicare în limba română",
         "Matematică și explorarea mediului",
@@ -185,78 +232,219 @@ window.APP = {
         "Dezvoltare personală",
         "Religie"
       ],
-      semestre: [
-        { name: "Semestrul I", units: [
-          { title: "Textul: citire și înțelegere", weeks: "săpt. 1–6", subject: "Comunicare în limba română", body: "Citire conștientă, identificarea ideilor principale." },
-          { title: "Numere 0–100: compunere și descompunere", weeks: "săpt. 7–10", subject: "Matematică și explorarea mediului", body: "Sute, zeci, unități; ordonare și comparare." },
-          { title: "Adunare și scădere cu trecere peste ordin", weeks: "săpt. 11–16", subject: "Matematică și explorarea mediului", body: "Algoritmi de calcul, probe prin operația inversă." }
-        ]},
-        { name: "Semestrul II", units: [
-          { title: "Ortografie și despărțirea în silabe", weeks: "săpt. 17–22", subject: "Comunicare în limba română", body: "Reguli de bază, scriere corectă a cuvintelor frecvente." },
-          { title: "Înmulțirea (baze) — tabla înmulțirii", weeks: "săpt. 23–27", subject: "Matematică și explorarea mediului", body: "Conceptul de înmulțire, tabla înmulțirii cu 2, 3, 4, 5." },
-          { title: "Măsurători și geometrie", weeks: "săpt. 28–31", subject: "Matematică și explorarea mediului", body: "Lungimi, timp, bani; figuri geometrice plane." },
-          { title: "Mediul înconjurător: plante și viețuitoare", weeks: "săpt. 32–35", subject: "Științe", body: "Necesitățile viețuitoarelor, igiena și sănătatea." }
-        ]}
+      modules: [
+        {
+          name: "Modulul 1",
+          weeks: "7 sept – 23 oct 2026",
+          items: [
+            { t: "Călătorii, călătorii", w: "7–25 sept", s: "3 săptămâni" },
+            { t: "În lumea cunoașterii", w: "28 sept – 23 oct", s: "4 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 2",
+          weeks: "2 nov – 22 dec 2026",
+          items: [
+            { t: "Pe cărările toamnei", w: "2–20 nov", s: "3 săptămâni" },
+            { t: "Colindăm în lung și-n lat", w: "23 nov – 15 dec", s: "4 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 3",
+          weeks: "11 ian – 19 feb 2027",
+          items: [
+            { t: "Cu iarna la drum", w: "11 ian – 5 feb", s: "4 săptămâni" },
+            { t: "Călător printre stele", w: "8–19 feb", s: "2 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 4",
+          weeks: "1 mar – 23 apr 2027",
+          items: [
+            { t: "Pe aripile primăverii", w: "1–12 mar", s: "2 săptămâni" },
+            { t: "Călătorim prin Țara Copilăriei", w: "15–26 mar", s: "2 săptămâni" },
+            { t: "Pe covorul fermecat", w: "29 mar – 16 apr", s: "3 săptămâni" }
+          ]
+        },
+        {
+          name: "Modulul 5",
+          weeks: "5 mai – 18 iun 2027",
+          items: [
+            { t: "În lumea invențiilor", w: "5–28 mai", s: "4 săptămâni" },
+            { t: "În căutarea verii", w: "31 mai – 18 iun", s: "3 săptămâni" }
+          ]
+        }
       ]
     },
 
     3: {
-      source: "Plan-cadru oficial · anul școlar 2026–2027 (structura detaliată se va importa din planificarea Editura EDU)",
+      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      orar: [
+        { d: "Limba și literatura română", ore: 5 },
+        { d: "Limba modernă", ore: 2 },
+        { d: "Matematică", ore: 4 },
+        { d: "Științe ale naturii", ore: 1 },
+        { d: "Educație civică", ore: 1 },
+        { d: "Religie", ore: 1 },
+        { d: "Educație fizică", ore: 2 },
+        { d: "Joc și mișcare", ore: 1 },
+        { d: "Muzică și mișcare", ore: 1 },
+        { d: "Arte vizuale și abilități practice", ore: 2 },
+        { d: "Total ore / săptămână", ore: 20, total: true }
+      ],
       disciplines: [
-        "Limba română",
+        "Limba și literatura română",
         "Matematică",
         "Științe ale naturii",
         "Educație civică",
-        "Limba modernă (engleză)",
+        "Limba modernă",
         "Arte vizuale și abilități practice",
         "Muzică și mișcare",
         "Educație fizică",
         "Religie"
       ],
-      semestre: [
-        { name: "Semestrul I", units: [
-          { title: "Textul narativ și părțile lui", weeks: "săpt. 1–5", subject: "Limba română", body: "Personaje, desfășurare, idee principală; povestire." },
-          { title: "Numere naturale până la 1 000 000", weeks: "săpt. 6–9", subject: "Matematică", body: "Citire, scriere, comparare, rotunjire." },
-          { title: "Înmulțirea și împărțirea", weeks: "săpt. 10–13", subject: "Matematică", body: "Tabla înmulțirii, împărțirea, relația dintre ele." },
-          { title: "Localitatea și normele de conviețuire", weeks: "săpt. 14–16", subject: "Educație civică", body: "Roluri, reguli, respect și responsabilitate în comunitate." }
-        ]},
-        { name: "Semestrul II", units: [
-          { title: "Compuneri și ortograme", weeks: "săpt. 17–22", subject: "Limba română", body: "Redactare de texte scurte, s-a/sau, ia/i-a." },
-          { title: "Fracții elementare", weeks: "săpt. 23–26", subject: "Matematică", body: "Jumătate, sfert, treime; recunoaștere vizuală." },
-          { title: "Unități de măsură și geometrie", weeks: "săpt. 27–30", subject: "Matematică", body: "Lungimi, mase, capacități; perimetrul figurilor." },
-          { title: "Fenomene ale naturii și corpul uman", weeks: "săpt. 31–35", subject: "Științe ale naturii", body: "Circuitul apei, plante și animale, igiena corpului." }
-        ]}
+      modules: [
+        {
+          name: "Modulul 1",
+          weeks: "7 sept – 23 oct 2026",
+          items: [
+            { t: "Din nou la drum", d: "Română", w: "7–25 sept", s: "15 ore" },
+            { t: "În călătorie cu trenul", d: "Română", w: "28 sept – 23 oct", s: "20 ore" },
+            { t: "Recapitulare inițială", d: "Matematică", w: "7–25 sept", s: "12 ore" },
+            { t: "Numerele naturale 0–10 000", d: "Matematică", w: "28 sept – 23 oct", s: "16 ore" },
+            { t: "Recapitulare · Lumea vie", d: "Științe", w: "7 sept – 23 oct", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 2",
+          weeks: "2 nov – 22 dec 2026",
+          items: [
+            { t: "Călătorim pe mătură", d: "Română", w: "2–20 nov", s: "15 ore" },
+            { t: "Colindăm în lung și-n lat", d: "Română", w: "23 nov – 15 dec", s: "18 ore" },
+            { t: "Adunarea și scăderea 0–10 000", d: "Matematică", w: "2–20 nov", s: "12 ore" },
+            { t: "Înmulțirea 0–10 000", d: "Matematică", w: "23 nov – 15 dec", s: "14 ore" },
+            { t: "Lumea vie (continuare)", d: "Științe", w: "2 nov – 15 dec", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 3",
+          weeks: "11 ian – 19 feb 2027",
+          items: [
+            { t: "Călătorim cu sania", d: "Română", w: "11–29 ian", s: "15 ore" },
+            { t: "Călătorim printre planete", d: "Română", w: "1–19 feb", s: "15 ore" },
+            { t: "Înmulțirea cu factor de 2+ cifre", d: "Matematică", w: "11–29 ian", s: "12 ore" },
+            { t: "Împărțirea numerelor 0–100", d: "Matematică", w: "1–19 feb", s: "12 ore" },
+            { t: "Pământul – mediu de viață", d: "Științe", w: "11 ian – 19 feb", s: "6 ore" }
+          ]
+        },
+        {
+          name: "Modulul 4",
+          weeks: "1 mar – 23 apr 2027",
+          items: [
+            { t: "Pe aripi de păsări", d: "Română", w: "1–26 mar", s: "20 ore" },
+            { t: "Călătorim prin Țara veseliei", d: "Română", w: "29 mar – 16 apr", s: "15 ore" },
+            { t: "Fracții", d: "Matematică", w: "1–26 mar", s: "16 ore" },
+            { t: "Elemente intuitive de geometrie", d: "Matematică", w: "29 mar – 16 apr", s: "12 ore" },
+            { t: "Din lumea fizicii", d: "Științe", w: "1 mar – 16 apr", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 5",
+          weeks: "5 mai – 18 iun 2027",
+          items: [
+            { t: "Străbatem Țara piticilor", d: "Română", w: "5–25 mai", s: "18 ore" },
+            { t: "În căutarea verii", d: "Română", w: "31 mai – 18 iun", s: "15 ore" },
+            { t: "Unități și instrumente de măsură", d: "Matematică", w: "5–28 mai", s: "14 ore" },
+            { t: "Recapitulare finală", d: "Matematică", w: "31 mai – 18 iun", s: "12 ore" },
+            { t: "Din lumea fizicii (cont.) · Recapitulare", d: "Științe", w: "5 mai – 18 iun", s: "7 ore" }
+          ]
+        }
       ]
     },
 
     4: {
-      source: "Plan-cadru oficial · anul școlar 2026–2027 (structura detaliată se va importa din planificarea Editura EDU)",
+      source: "Editura EDU — Planificare calendaristică, anul școlar 2026–2027",
+      orar: [
+        { d: "Limba și literatura română", ore: 5 },
+        { d: "Limba modernă", ore: 2 },
+        { d: "Matematică", ore: 4 },
+        { d: "Științe ale naturii", ore: 1 },
+        { d: "Istorie", ore: 1 },
+        { d: "Geografie", ore: 1 },
+        { d: "Educație civică", ore: 1 },
+        { d: "Religie", ore: 1 },
+        { d: "Educație fizică", ore: 2 },
+        { d: "Joc și mișcare", ore: 1 },
+        { d: "Muzică și mișcare", ore: 1 },
+        { d: "Arte vizuale și abilități practice", ore: 2 },
+        { d: "Total ore / săptămână", ore: 22, total: true }
+      ],
       disciplines: [
-        "Limba română",
+        "Limba și literatura română",
         "Matematică",
         "Științe ale naturii",
         "Istorie",
         "Geografie",
         "Educație civică",
-        "Limba modernă (engleză)",
+        "Limba modernă",
         "Arte vizuale și abilități practice",
         "Muzică și mișcare",
         "Educație fizică",
         "Religie"
       ],
-      semestre: [
-        { name: "Semestrul I", units: [
-          { title: "Textul: tipuri și trăsături", weeks: "săpt. 1–5", subject: "Limba română", body: "Narațiune, descriere, dialog; planul textului." },
-          { title: "Numere naturale și operații", weeks: "săpt. 6–9", subject: "Matematică", body: "Adunare, scădere, înmulțire, împărțire — consolidare." },
-          { title: "Fracții: citire, scriere, comparare", weeks: "săpt. 10–13", subject: "Matematică", body: "Fracții egale cu unitatea, subunitare, comparare." },
-          { title: "România pe hartă", weeks: "săpt. 14–16", subject: "Geografie", body: "Relief, râuri, orașe mari; regiunile țării." }
-        ]},
-        { name: "Semestrul II", units: [
-          { title: "Compuneri și corectitudine gramaticală", weeks: "săpt. 17–22", subject: "Limba română", body: "Părți de vorbire uzuale, redactare corectă." },
-          { title: "Fracții zecimale și unități de măsură", weeks: "săpt. 23–26", subject: "Matematică", body: "Zecimi, sutimi; lungimi, mase, capacități." },
-          { title: "Arii și volume (noțiuni introductive)", weeks: "săpt. 27–30", subject: "Matematică", body: "Aria pătratului și dreptunghiului; cubul." },
-          { title: "Începuturile istoriei românilor", weeks: "săpt. 31–35", subject: "Istorie", body: "Geto-dacii, romanii, primele forme de organizare." }
-        ]}
+      modules: [
+        {
+          name: "Modulul 1",
+          weeks: "7 sept – 23 oct 2026",
+          items: [
+            { t: "Din nou la drum", d: "Română", w: "7–25 sept", s: "15 ore" },
+            { t: "Alege să fii bun!", d: "Română", w: "28 sept – 23 oct", s: "20 ore" },
+            { t: "Recapitulare · Numere 0–1 000 000", d: "Matematică", w: "7 sept – 23 oct", s: "28 ore" },
+            { t: "Recapitulare · Științele vieții", d: "Științe", w: "7 sept – 23 oct", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 2",
+          weeks: "2 nov – 22 dec 2026",
+          items: [
+            { t: "Înalță-te prin cunoaștere!", d: "Română", w: "2–27 nov", s: "20 ore" },
+            { t: "Să nu uiți oameni, țară și colinde!", d: "Română", w: "2–15 dec", s: "13 ore" },
+            { t: "Adunarea și scăderea 0–1 000 000", d: "Matematică", w: "2–20 nov", s: "12 ore" },
+            { t: "Înmulțirea 0–1 000 000", d: "Matematică", w: "23 nov – 15 dec", s: "14 ore" },
+            { t: "Științele vieții (continuare)", d: "Științe", w: "2 nov – 15 dec", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 3",
+          weeks: "11 ian – 19 feb 2027",
+          items: [
+            { t: "Prețuiește-ți neamul!", d: "Română", w: "11 ian – 19 feb", s: "30 ore" },
+            { t: "Împărțirea 0–1 000 000", d: "Matematică", w: "11 ian – 19 feb", s: "24 ore" },
+            { t: "Științele Pământului", d: "Științe", w: "11 ian – 19 feb", s: "6 ore" }
+          ]
+        },
+        {
+          name: "Modulul 4",
+          weeks: "1 mar – 23 apr 2027",
+          items: [
+            { t: "Iubește-ți familia!", d: "Română", w: "1 mar – 16 apr", s: "35 ore" },
+            { t: "Probleme", d: "Matematică", w: "1–12 mar", s: "8 ore" },
+            { t: "Fracții", d: "Matematică", w: "15–26 mar", s: "8 ore" },
+            { t: "Elemente intuitive de geometrie", d: "Matematică", w: "29 mar – 16 apr", s: "12 ore" },
+            { t: "Științele Pământului (cont.) · Fizica", d: "Științe", w: "1 mar – 16 apr", s: "7 ore" }
+          ]
+        },
+        {
+          name: "Modulul 5",
+          weeks: "5 mai – 18 iun 2027",
+          items: [
+            { t: "Fii vesel mereu!", d: "Română", w: "5–28 mai", s: "18 ore" },
+            { t: "Ai reușit!", d: "Română", w: "31 mai – 18 iun", s: "14 ore" },
+            { t: "Unități de măsură", d: "Matematică", w: "5–28 mai", s: "14 ore" },
+            { t: "Recapitulare finală", d: "Matematică", w: "31 mai – 18 iun", s: "12 ore" },
+            { t: "Științele fizicii (cont.) · Recapitulare", d: "Științe", w: "5 mai – 18 iun", s: "7 ore" }
+          ]
+        }
       ]
     }
   }
