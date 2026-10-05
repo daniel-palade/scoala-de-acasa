@@ -79,9 +79,35 @@
   const mBtn = $('m-btn');
   let fbNext = null;
 
+  // ---------- sunet vesel la răspuns corect (nimic la greșit) ----------
+  let audioCtx = null;
+  function playHappy() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach(function (f, i) {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now + i * 0.1);
+        const t0 = now + i * 0.1;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(0.5, t0 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.28);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start(t0);
+        o.stop(t0 + 0.3);
+      });
+    } catch (e) { /* sunetul este opțional */ }
+  }
+
   // ok = răspuns corect?, right = textul răspunsului corect (poate fi null),
   // chosen = ce a ales copilul (poate fi null), why = explicație, sub = subtitlu opțional.
   function showFeedback(ok, right, chosen, why, sub) {
+    if (ok) playHappy();
     mEmoji.textContent = ok ? '✅' : '❌';
     mTitle.textContent = ok ? 'Corect!' : 'Greșit!';
     let subtitle = sub;
@@ -369,6 +395,7 @@
     quizEl.appendChild(card);
 
     function renderQ() {
+      locked = false;
       card.innerHTML = '';
       const dots = progress.querySelectorAll('.q-bar span');
       dots.forEach(function (d, idx) {
@@ -460,4 +487,83 @@
   }
 
   buildQuiz();
+
+  // ---------- DESCĂRCARE PDF (fișă de lucru printabilă) ----------
+  const btnPdf = $('btn-pdf');
+  if (btnPdf) btnPdf.addEventListener('click', downloadLessonPdf);
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  function activityPrintable() {
+    const a = content.activity;
+    let h = '';
+    if (a.type === 'cuvinte') {
+      const words = a.target.map(function (p) { return p[0]; });
+      h += '<p><b>Găsește cuvintele care conțin litera „' + esc(a.letter) + '".</b></p>';
+      h += '<p>Cuvinte cu litera „' + esc(a.letter) + '": <span class="answer">' + esc(words.join(', ')) + '</span>.</p>';
+    } else if (a.type === 'numara') {
+      h += '<p><b>Numără obiectele din fiecare rând.</b></p>';
+      a.rounds.forEach(function (r, i) {
+        h += '<p>' + (i + 1) + ') Câte obiecte sunt? ' + r.e + ' × ' + r.n + ' → Răspuns: <span class="answer">' + r.ans + '</span></p>';
+      });
+    } else if (a.type === 'flash') {
+      h += '<p><b>Rezolvă exercițiile.</b></p>';
+      a.rounds.forEach(function (r, i) {
+        h += '<p>' + (i + 1) + ') ' + r.a + ' ' + r.op + ' ' + r.b + ' = ? → Răspuns: <span class="answer">' + r.ans + '</span></p>';
+      });
+    } else if (a.type === 'intrus') {
+      h += '<p><b>Găsește intrusul din fiecare rând.</b></p>';
+      a.rounds.forEach(function (r, i) {
+        const words = r.items.map(function (p) { return p[0]; }).join(', ');
+        const odd = r.items[r.odd][0];
+        h += '<p>' + (i + 1) + ') ' + esc(words) + ' → Răspuns: <span class="answer">' + esc(odd) + '</span></p>';
+      });
+    }
+    return h;
+  }
+
+  function quizPrintable() {
+    let h = '';
+    content.quiz.forEach(function (q, i) {
+      h += '<p><b>' + (i + 1) + ') ' + esc(q.q) + '</b></p>';
+      q.o.forEach(function (opt, j) {
+        const isC = j === q.c;
+        h += '<p class="pop' + (isC ? ' correct' : '') + '">' + String.fromCharCode(65 + j) + ') ' + esc(opt) + (isC ? ' ✓' : '') + '</p>';
+      });
+    });
+    return h;
+  }
+
+  function buildPrintableHtml() {
+    const meta = [item.w, item.s, item.d].filter(Boolean).join(' · ');
+    return '<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8">' +
+      '<title>' + esc(item.t) + ' — fișă de lucru</title>' +
+      '<style>' +
+      'body{font-family:Arial,Helvetica,sans-serif;color:#1f2937;margin:32px;line-height:1.55;font-size:14px}' +
+      'h1{font-size:22px;margin:0 0 4px}' +
+      'h2{font-size:15px;color:#6b7280;margin:0 0 20px;font-weight:normal}' +
+      'h3{font-size:16px;margin:24px 0 10px;border-bottom:2px solid #111827;padding-bottom:4px}' +
+      'p{margin:6px 0}' +
+      '.pop{margin-left:18px}' +
+      '.answer{color:#166534;font-weight:bold}' +
+      '.correct{color:#166534;font-weight:bold}' +
+      '.footer{margin-top:28px;font-size:11px;color:#9ca3af}' +
+      '</style></head><body>' +
+      '<h1>📚 ' + esc(item.t) + '</h1>' +
+      '<h2>' + esc(cls.title) + (meta ? ' · ' + esc(meta) : '') + ' · Școala de Acasă</h2>' +
+      '<h3>Activitate interactivă</h3>' + activityPrintable() +
+      '<h3>Testul lecției</h3>' + quizPrintable() +
+      '<p class="footer">Fișă generată de Școala de Acasă. Răspunsurile corecte sunt marcate cu verde.</p>' +
+      '</body></html>';
+  }
+
+  function downloadLessonPdf() {
+    const w = window.open('', '_blank', 'width=840,height=680');
+    if (!w) { alert('Te rugăm să permiți ferestrele pop-up pentru a descărca PDF-ul.'); return; }
+    w.document.open();
+    w.document.write(buildPrintableHtml());
+    w.document.close();
+    w.focus();
+    setTimeout(function () { w.print(); }, 400);
+  }
 })();
