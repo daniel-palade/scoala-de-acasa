@@ -59,6 +59,51 @@
   // ---------- conținut ----------
   const content = CONTENT.get(n, item);
 
+  // ---------- POPUP FEEDBACK (modal) ----------
+  const fbBack = document.createElement('div');
+  fbBack.className = 'modal-backdrop';
+  fbBack.innerHTML =
+    '<div class="modal">' +
+    '<div class="m-emoji" id="m-emoji">✅</div>' +
+    '<h3 id="m-title">Corect!</h3>' +
+    '<p class="m-sub" id="m-sub"></p>' +
+    '<div class="m-explain" id="m-explain"></div>' +
+    '<button class="btn btn-primary m-btn" id="m-btn">Continuă</button>' +
+    '</div>';
+  document.body.appendChild(fbBack);
+
+  const mEmoji = $('m-emoji');
+  const mTitle = $('m-title');
+  const mSub = $('m-sub');
+  const mExplain = $('m-explain');
+  const mBtn = $('m-btn');
+  let fbNext = null;
+
+  // ok = răspuns corect?, right = textul răspunsului corect (poate fi null),
+  // chosen = ce a ales copilul (poate fi null), why = explicație, sub = subtitlu opțional.
+  function showFeedback(ok, right, chosen, why, sub) {
+    mEmoji.textContent = ok ? '✅' : '❌';
+    mTitle.textContent = ok ? 'Corect!' : 'Greșit!';
+    let subtitle = sub;
+    if (!subtitle) {
+      if (ok) {
+        subtitle = right ? ('„' + right + '" este răspunsul bun!') : 'Bravo!';
+      } else {
+        const parts = [];
+        if (chosen) parts.push('Ai ales „' + chosen + '".');
+        if (right) parts.push('Răspunsul corect este „' + right + '".');
+        subtitle = parts.join(' ');
+      }
+    }
+    mSub.textContent = subtitle;
+    mExplain.textContent = why || '';
+    mBtn.onclick = function () {
+      fbBack.classList.remove('on');
+      if (fbNext) { const cb = fbNext; fbNext = null; cb(); }
+    };
+    fbBack.classList.add('on');
+  }
+
   // ---------- TIMER ----------
   const tDisplay = $('timer-display');
   const tToggle = $('timer-toggle');
@@ -153,12 +198,29 @@
           b.classList.add('ok');
           b.dataset.done = '1';
           found++;
-          if (found >= act.target.length) {
-            setTimeout(completeActivity, 500);
-          }
+          const finished = found >= act.target.length;
+          fbNext = function () {
+            if (finished) completeActivity();
+          };
+          showFeedback(
+            true,
+            null,
+            null,
+            '„' + word + '" conține litera „' + act.letter + '". Bravo! Ai găsit un cuvânt corect.',
+            finished
+              ? 'Ai găsit toate cuvintele cu litera „' + act.letter + '"!'
+              : '„' + word + '" conține litera „' + act.letter + '".'
+          );
         } else {
           b.classList.add('no');
-          setTimeout(function () { b.classList.remove('no'); }, 450);
+          fbNext = function () { b.classList.remove('no'); };
+          showFeedback(
+            false,
+            null,
+            word,
+            '„' + word + '" NU conține litera „' + act.letter + '". Caută cuvintele în care auzi și vezi litera ' + act.letter + '.',
+            '„' + word + '" nu conține litera „' + act.letter + '". Mai încearcă!'
+          );
         }
       });
       grid.appendChild(b);
@@ -195,13 +257,15 @@
           if (grid.dataset.done) return;
           grid.dataset.done = '1';
           const ok = idx === r.odd;
+          const oddName = r.items[r.odd][0];
           if (ok) {
             b.classList.add('ok');
           } else {
             b.classList.add('no');
             grid.querySelectorAll('.word-card')[r.odd].classList.add('ok');
           }
-          setTimeout(function () { i++; draw(); }, 900);
+          fbNext = function () { i++; draw(); };
+          showFeedback(ok, oddName, ok ? null : item[0], r.why);
         });
         grid.appendChild(b);
       });
@@ -249,7 +313,8 @@
               if (String(ob.textContent) === String(r.ans)) ob.classList.add('ok');
             });
           }
-          setTimeout(function () { i++; draw(); }, 700);
+          fbNext = function () { i++; draw(); };
+          showFeedback(ok, String(r.ans), String(val), r.why);
         });
         opts.appendChild(b);
       });
@@ -326,43 +391,25 @@
         opts.appendChild(b);
       });
       card.appendChild(opts);
+    }
 
-      const fb = document.createElement('div');
-      fb.className = 'q-feedback';
-      card.appendChild(fb);
+    function answer(idx, btn) {
+      if (locked) return;
+      locked = true;
 
-      const next = document.createElement('button');
-      next.className = 'btn btn-primary q-next';
-      next.textContent = 'Continuă →';
-      next.style.display = 'none';
-      next.addEventListener('click', function () {
-        qi++; locked = false;
-        if (qi >= questions.length) finish();
-        else renderQ();
-      });
-      card.appendChild(next);
-
-      var nextRef = next; // pentru closure
-      function answer(idx, btn) {
-        if (locked) return;
-        locked = true;
-
-        const correctIdx = q.c;
-        const isOk = idx === correctIdx;
-        const allBtns = opts.querySelectorAll('.opt');
-        allBtns[correctIdx].classList.add('ok');
-        if (!isOk) {
-          btn.classList.add('no');
-          wrong++;
-        }
-        fb.innerHTML = isOk
-          ? '<span class="fb ok-fb">✅ Corect! Bravo!</span>'
-          : '<span class="fb no-fb">❌ Nu. Răspunsul corect este evidențiat.</span>';
-
-        allBtns.forEach(function (b) { b.disabled = true; });
-        nextRef.textContent = (qi >= questions.length - 1) ? 'Vezi rezultatul →' : 'Continuă →';
-        nextRef.style.display = '';
+      const q = questions[qi];
+      const correctIdx = q.c;
+      const isOk = idx === correctIdx;
+      const allBtns = card.querySelectorAll('.opt');
+      allBtns[correctIdx].classList.add('ok');
+      if (!isOk) {
+        btn.classList.add('no');
+        wrong++;
       }
+      allBtns.forEach(function (b) { b.disabled = true; });
+
+      fbNext = function () { qi++; if (qi >= questions.length) finish(); else renderQ(); };
+      showFeedback(isOk, q.o[q.c], q.o[idx], q.e);
     }
 
     function finish() {
