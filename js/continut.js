@@ -1,6 +1,6 @@
 /* Continut educațional — dicționar de litere, indicații pentru părinți,
    bănci de întrebări și activități interactive. Conținut demo, corect pedagogic,
-   care se înlocuiește/completează conform programei oficiale (edu.ro). */
+   care se înlocuiește/completează conform programei oficiale (edu.ro) în faza P4. */
 
 window.CONTENT = (function () {
   // ---------- Dicționar literă → cuvinte uzuale (clasa 0) ----------
@@ -91,97 +91,97 @@ window.CONTENT = (function () {
   // ---------- Bănci de întrebări pentru quiz (pe clasă) ----------
   const QUIZ_BANK = {
     0: [
-      { q: 'Câte picioare are o pisică?', o: ['2', '3', '4', '5'], c: 2 },
-      { q: 'Ce animal spune „miau"?', o: ['Câinele', 'Pisica', 'Calul', 'Peștele'], c: 1 },
-      { q: 'Câte degete ai la o mână?', o: ['3', '4', '5', '6'], c: 2 },
-      { q: 'Care dintre acestea este o culoare?', o: ['Masa', 'Roșu', 'Mingea', 'Scaunul'], c: 1 },
-      { q: 'Câte roți are o mașină?', o: ['2', '3', '4', '5'], c: 2 },
-      { q: 'Ce cade din cer când e frig iarna?', o: ['Ploaie caldă', 'Zăpada', 'Frunze verzi', 'Soare'], c: 1 },
-      { q: 'Câte zile are o săptămână?', o: ['5', '6', '7', '8'], c: 2 },
-      { q: 'Care animal trăiește în apă?', o: ['Peștele', 'Găina', 'Vaca', 'Calul'], c: 0 }
+      { q: 'Câte picioare are o pisică?', o: ['2', '3', '4', '5'], c: 2, e: 'Pisica are 4 picioare — două în față și două în spate.' },
+      { q: 'Ce animal spune „miau"?', o: ['Câinele', 'Pisica', 'Calul', 'Peștele'], c: 1, e: 'Pisica spune „miau", la fel cum câinele spune „ham".' },
+      { q: 'Câte degete ai la o mână?', o: ['3', '4', '5', '6'], c: 2, e: 'O mână are 5 degete: unul mare și patru mici.' },
+      { q: 'Care dintre acestea este o culoare?', o: ['Masa', 'Roșu', 'Mingea', 'Scaunul'], c: 1, e: '„Roșu" este o culoare. Masa, mingea și scaunul sunt obiecte.' },
+      { q: 'Câte roți are o mașină?', o: ['2', '3', '4', '5'], c: 2, e: 'O mașină are 4 roți — câte una la fiecare colț.' },
+      { q: 'Ce cade din cer când e frig iarna?', o: ['Ploaie caldă', 'Zăpada', 'Frunze verzi', 'Soare'], c: 1, e: 'Iarna cade zăpada, pentru că afară este frig.' },
+      { q: 'Câte zile are o săptămână?', o: ['5', '6', '7', '8'], c: 2, e: 'O săptămână are 7 zile: luni, marți, miercuri, joi, vineri, sâmbătă și duminică.' },
+      { q: 'Care animal trăiește în apă?', o: ['Peștele', 'Găina', 'Vaca', 'Calul'], c: 0, e: 'Peștele trăiește în apă, pentru că acolo respiră prin branhii.' }
     ],
     1: [
-      { q: 'Cât face 4 + 3?', o: ['6', '7', '8', '5'], c: 1 },
-      { q: 'Cât face 10 − 4?', o: ['5', '7', '6', '8'], c: 2 },
-      { q: 'Care număr e mai mare: 27 sau 72?', o: ['27', '72', 'Sunt egale', 'Niciunul'], c: 1 },
-      { q: 'Cât face 5 + 5 + 5?', o: ['10', '12', '15', '20'], c: 2 },
-      { q: 'Numărul care urmează după 39 este…', o: ['38', '40', '41', '49'], c: 1 },
-      { q: 'Cât face 20 − 9?', o: ['9', '10', '11', '12'], c: 2 },
-      { q: 'Câte laturi are un triunghi?', o: ['2', '3', '4', '5'], c: 1 },
-      { q: 'Cât face 6 + 6?', o: ['10', '12', '14', '16'], c: 1 }
+      { q: 'Cât face 4 + 3?', o: ['6', '7', '8', '5'], c: 1, e: '4 + 3 = 7. Pornești de la 4 și numeri încă trei: 5, 6, 7.' },
+      { q: 'Cât face 10 − 4?', o: ['5', '7', '6', '8'], c: 2, e: '10 − 4 = 6. Scoți 4 din 10 și rămân 6.' },
+      { q: 'Care număr e mai mare: 27 sau 72?', o: ['27', '72', 'Sunt egale', 'Niciunul'], c: 1, e: '72 este mai mare, pentru că are 7 zeci, iar 27 are doar 2 zeci.' },
+      { q: 'Cât face 5 + 5 + 5?', o: ['10', '12', '15', '20'], c: 2, e: '5 + 5 + 5 = 15 (adică 3 × 5).' },
+      { q: 'Numărul care urmează după 39 este…', o: ['38', '40', '41', '49'], c: 1, e: 'După 39 vine 40, ca atunci când numeri înainte.' },
+      { q: 'Cât face 20 − 9?', o: ['9', '10', '11', '12'], c: 2, e: '20 − 9 = 11. Din 20 scazi 9 și rămân 11.' },
+      { q: 'Câte laturi are un triunghi?', o: ['2', '3', '4', '5'], c: 1, e: 'Un triunghi are 3 laturi („tri" înseamnă trei).' },
+      { q: 'Cât face 6 + 6?', o: ['10', '12', '14', '16'], c: 1, e: '6 + 6 = 12.' }
     ],
     2: [
-      { q: 'Cât face 25 + 15?', o: ['30', '35', '40', '45'], c: 2 },
-      { q: 'Cât face 60 − 25?', o: ['25', '30', '35', '40'], c: 2 },
-      { q: 'Câte luni are un an?', o: ['10', '11', '12', '13'], c: 2 },
-      { q: 'Care zi urmează după marți?', o: ['Luni', 'Miercuri', 'Joi', 'Duminică'], c: 1 },
-      { q: 'Cât face 100 − 45?', o: ['45', '50', '55', '60'], c: 2 },
-      { q: 'Jumătate din 20 este…', o: ['5', '10', '15', '20'], c: 1 },
-      { q: 'Cât face 7 + 7 + 7?', o: ['14', '20', '21', '28'], c: 2 },
-      { q: 'Câte zile are o săptămână?', o: ['5', '6', '7', '8'], c: 2 }
+      { q: 'Cât face 25 + 15?', o: ['30', '35', '40', '45'], c: 2, e: '25 + 15 = 40 (20 + 10 = 30, 5 + 5 = 10, total 40).' },
+      { q: 'Cât face 60 − 25?', o: ['25', '30', '35', '40'], c: 2, e: '60 − 25 = 35.' },
+      { q: 'Câte luni are un an?', o: ['10', '11', '12', '13'], c: 2, e: 'Un an are 12 luni.' },
+      { q: 'Care zi urmează după marți?', o: ['Luni', 'Miercuri', 'Joi', 'Duminică'], c: 1, e: 'Zilele vin în ordine: luni, marți, miercuri — deci după marți vine miercuri.' },
+      { q: 'Cât face 100 − 45?', o: ['45', '50', '55', '60'], c: 2, e: '100 − 45 = 55.' },
+      { q: 'Jumătate din 20 este…', o: ['5', '10', '15', '20'], c: 1, e: 'Jumătate din 20 este 10, pentru că 10 + 10 = 20.' },
+      { q: 'Cât face 7 + 7 + 7?', o: ['14', '20', '21', '28'], c: 2, e: '7 + 7 + 7 = 21 (adică 3 × 7).' },
+      { q: 'Câte zile are o săptămână?', o: ['5', '6', '7', '8'], c: 2, e: 'O săptămână are 7 zile.' }
     ],
     3: [
-      { q: 'Cât face 6 × 7?', o: ['36', '42', '48', '49'], c: 1 },
-      { q: 'Cât face 36 : 4?', o: ['8', '9', '10', '12'], c: 1 },
-      { q: 'Cât face 125 + 75?', o: ['190', '200', '210', '215'], c: 1 },
-      { q: 'Câte minute are o oră?', o: ['30', '45', '60', '90'], c: 2 },
-      { q: 'Cât face 9 × 8?', o: ['64', '70', '72', '81'], c: 2 },
-      { q: 'Cât face 100 : 4?', o: ['20', '25', '30', '40'], c: 1 },
-      { q: 'Cât face 500 − 125?', o: ['350', '375', '400', '425'], c: 1 },
-      { q: 'Câte zile are luna ianuarie?', o: ['28', '30', '31', '29'], c: 2 }
+      { q: 'Cât face 6 × 7?', o: ['36', '42', '48', '49'], c: 1, e: '6 × 7 = 42.' },
+      { q: 'Cât face 36 : 4?', o: ['8', '9', '10', '12'], c: 1, e: '36 : 4 = 9, pentru că 9 × 4 = 36.' },
+      { q: 'Cât face 125 + 75?', o: ['190', '200', '210', '215'], c: 1, e: '125 + 75 = 200.' },
+      { q: 'Câte minute are o oră?', o: ['30', '45', '60', '90'], c: 2, e: 'O oră are 60 de minute.' },
+      { q: 'Cât face 9 × 8?', o: ['64', '70', '72', '81'], c: 2, e: '9 × 8 = 72.' },
+      { q: 'Cât face 100 : 4?', o: ['20', '25', '30', '40'], c: 1, e: '100 : 4 = 25, pentru că 25 × 4 = 100.' },
+      { q: 'Cât face 500 − 125?', o: ['350', '375', '400', '425'], c: 1, e: '500 − 125 = 375.' },
+      { q: 'Câte zile are luna ianuarie?', o: ['28', '30', '31', '29'], c: 2, e: 'Ianuarie are 31 de zile.' }
     ],
     4: [
-      { q: 'Cât face 1/2 din 40?', o: ['10', '20', '30', '40'], c: 1 },
-      { q: 'Cât face 12 × 12?', o: ['120', '132', '144', '156'], c: 2 },
-      { q: 'Cât face 144 : 12?', o: ['10', '11', '12', '13'], c: 2 },
-      { q: 'Cât fac 3/4 din 100?', o: ['50', '65', '75', '80'], c: 2 },
-      { q: 'Câte grade are un unghi drept?', o: ['45', '60', '90', '180'], c: 2 },
-      { q: 'Câte minute are o oră și jumătate?', o: ['60', '75', '90', '120'], c: 2 },
-      { q: 'Cât face 900 : 3?', o: ['200', '300', '330', '450'], c: 1 },
-      { q: 'Perimetrul unui pătrat cu latura de 5 cm este…', o: ['15 cm', '20 cm', '25 cm', '30 cm'], c: 1 }
+      { q: 'Cât face 1/2 din 40?', o: ['10', '20', '30', '40'], c: 1, e: 'Jumătate din 40 este 20 (40 : 2 = 20).' },
+      { q: 'Cât face 12 × 12?', o: ['120', '132', '144', '156'], c: 2, e: '12 × 12 = 144.' },
+      { q: 'Cât face 144 : 12?', o: ['10', '11', '12', '13'], c: 2, e: '144 : 12 = 12, pentru că 12 × 12 = 144.' },
+      { q: 'Cât fac 3/4 din 100?', o: ['50', '65', '75', '80'], c: 2, e: '3/4 din 100 = 75 (100 : 4 = 25, apoi 25 × 3 = 75).' },
+      { q: 'Câte grade are un unghi drept?', o: ['45', '60', '90', '180'], c: 2, e: 'Un unghi drept are 90 de grade — exact ca un colț de carte.' },
+      { q: 'Câte minute are o oră și jumătate?', o: ['60', '75', '90', '120'], c: 2, e: 'O oră = 60 minute + o jumătate = 30 minute, total 90.' },
+      { q: 'Cât face 900 : 3?', o: ['200', '300', '330', '450'], c: 1, e: '900 : 3 = 300.' },
+      { q: 'Perimetrul unui pătrat cu latura de 5 cm este…', o: ['15 cm', '20 cm', '25 cm', '30 cm'], c: 1, e: 'Perimetrul = 4 laturi × 5 cm = 20 cm.' }
     ]
   };
 
   // ---------- Bancă de întrebări pentru limba română (clasele 1–4) ----------
   const RO_BANK = {
     1: [
-      { q: 'Cu ce literă începe cuvântul „casă"?', o: ['M', 'C', 'T', 'R'], c: 1 },
-      { q: 'Câte litere are cuvântul „mama"?', o: ['2', '3', '4', '5'], c: 2 },
-      { q: 'Care cuvânt începe cu litera „A"?', o: ['Masă', 'Avion', 'Tren', 'Ușă'], c: 1 },
-      { q: 'Câte silabe are „pisică" (pi-si-că)?', o: ['2', '3', '4', '5'], c: 1 },
-      { q: 'Care este prima literă a alfabetului?', o: ['Z', 'M', 'B', 'A'], c: 3 },
-      { q: 'Care cuvânt începe cu litera „M"?', o: ['Pară', 'Măr', 'Casă', 'Nor'], c: 1 }
+      { q: 'Cu ce literă începe cuvântul „casă"?', o: ['M', 'C', 'T', 'R'], c: 1, e: '„casă" începe cu litera C.' },
+      { q: 'Câte litere are cuvântul „mama"?', o: ['2', '3', '4', '5'], c: 2, e: '„mama" are 4 litere: m-a-m-a.' },
+      { q: 'Care cuvânt începe cu litera „A"?', o: ['Masă', 'Avion', 'Tren', 'Ușă'], c: 1, e: '„Avion" începe cu A. Celelalte încep cu M, T sau U.' },
+      { q: 'Câte silabe are „pisică" (pi-si-că)?', o: ['2', '3', '4', '5'], c: 1, e: '„pisică" are 3 silabe: pi-si-că.' },
+      { q: 'Care este prima literă a alfabetului?', o: ['Z', 'M', 'B', 'A'], c: 3, e: 'Alfabetul începe mereu cu litera A.' },
+      { q: 'Care cuvânt începe cu litera „M"?', o: ['Pară', 'Măr', 'Casă', 'Nor'], c: 1, e: '„Măr" începe cu litera M.' }
     ],
     2: [
-      { q: 'Care cuvânt este scris corect?', o: ['copil', 'cobil', 'pocil', 'lopci'], c: 0 },
-      { q: 'Care este opusul cuvântului „mare"?', o: ['înalt', 'mic', 'lung', 'gros'], c: 1 },
-      { q: 'Care cuvânt rimează cu „soare"?', o: ['casă', 'floare', 'masă', 'carte'], c: 1 },
-      { q: 'Câte litere are alfabetul limbii române?', o: ['26', '30', '31', '28'], c: 2 },
-      { q: '„Pisica a prins șoarecele." Cine a prins?', o: ['Șoarecele', 'Pisica', 'Câinele', 'Nimeni'], c: 1 },
-      { q: 'Care cuvânt are 3 silabe?', o: ['casă', 'masă', 'papucă', 'cal'], c: 2 }
+      { q: 'Care cuvânt este scris corect?', o: ['copil', 'cobil', 'pocil', 'lopci'], c: 0, e: 'Cuvântul scris corect este „copil".' },
+      { q: 'Care este opusul cuvântului „mare"?', o: ['înalt', 'mic', 'lung', 'gros'], c: 1, e: 'Opusul lui „mare" este „mic".' },
+      { q: 'Care cuvânt rimează cu „soare"?', o: ['casă', 'floare', 'masă', 'carte'], c: 1, e: '„floare" rimează cu „soare", pentru că ambele se termină în „-oare".' },
+      { q: 'Câte litere are alfabetul limbii române?', o: ['26', '30', '31', '28'], c: 2, e: 'Alfabetul românesc are 31 de litere.' },
+      { q: '„Pisica a prins șoarecele." Cine a prins?', o: ['Șoarecele', 'Pisica', 'Câinele', 'Nimeni'], c: 1, e: 'Pisica este cea care face acțiunea — ea l-a prins pe șoarecele.' },
+      { q: 'Care cuvânt are 3 silabe?', o: ['casă', 'masă', 'papucă', 'cal'], c: 2, e: '„papucă" are 3 silabe: pa-pu-că. Casă și masă au 2, cal are una.' }
     ],
     3: [
-      { q: 'Ce parte de vorbire este „aleargă"?', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1 },
-      { q: 'În „Câinele latră", care este substantivul?', o: ['latră', 'câinele', 'și', 'un'], c: 1 },
-      { q: 'Care cuvânt este adjectiv?', o: ['frumos', 'carte', 'aleargă', 'el'], c: 0 },
-      { q: '„Eu (a merge) ieri la școală." Forma corectă este:', o: ['am mers', 'am merse', 'oi merge', 'merg'], c: 0 },
-      { q: 'Care este pluralul cuvântului „copil"?', o: ['copii', 'copiii', 'copiluri', 'copile'], c: 0 },
-      { q: 'Care cuvânt este sinonim cu „vesel"?', o: ['trist', 'bucuros', 'supărat', 'liniștit'], c: 1 }
+      { q: 'Ce parte de vorbire este „aleargă"?', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1, e: '„aleargă" arată o acțiune, deci este un verb.' },
+      { q: 'În „Câinele latră", care este substantivul?', o: ['latră', 'câinele', 'și', 'un'], c: 1, e: '„câinele" este ființa despre care vorbim, deci este substantiv.' },
+      { q: 'Care cuvânt este adjectiv?', o: ['frumos', 'carte', 'aleargă', 'el'], c: 0, e: '„frumos" arată o însușire, deci este adjectiv.' },
+      { q: '„Eu (a merge) ieri la școală." Forma corectă este:', o: ['am mers', 'am merse', 'oi merge', 'merg'], c: 0, e: 'Trecutul lui „a merge" la persoana I este „am mers".' },
+      { q: 'Care este pluralul cuvântului „copil"?', o: ['copii', 'copiii', 'copiluri', 'copile'], c: 0, e: 'Pluralul lui „copil" este „copii".' },
+      { q: 'Care cuvânt este sinonim cu „vesel"?', o: ['trist', 'bucuros', 'supărat', 'liniștit'], c: 1, e: '„Bucuros" înseamnă același lucru cu „vesel".' }
     ],
     4: [
-      { q: 'Care este subiectul din propoziția „Maria citește"?', o: ['citește', 'Maria', 'o', 'poveste'], c: 1 },
-      { q: 'Care este predicatul din „Elevul scrie"?', o: ['Elevul', 'scrie', 'tema', 'în'], c: 1 },
-      { q: 'Care cuvânt este pronume?', o: ['frumos', 'el', 'aleargă', 'floare'], c: 1 },
-      { q: 'Care este opusul cuvântului „harnic"?', o: ['silitor', 'lenes', 'viteaz', 'blând'], c: 1 },
-      { q: 'Care propoziție este scrisă corect?', o: ['Eu sa dus.', 'Eu s-a dus.', 'Eu s-au dus.', 'Eu m-am dus.'], c: 3 },
-      { q: '„a alerga" este un…', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1 }
+      { q: 'Care este subiectul din propoziția „Maria citește"?', o: ['citește', 'Maria', 'o', 'poveste'], c: 1, e: '„Maria" face acțiunea, deci este subiectul.' },
+      { q: 'Care este predicatul din „Elevul scrie"?', o: ['Elevul', 'scrie', 'tema', 'în'], c: 1, e: '„scrie" este acțiunea (verbul), deci predicatul.' },
+      { q: 'Care cuvânt este pronume?', o: ['frumos', 'el', 'aleargă', 'floare'], c: 1, e: '„el" ține locul unui nume, deci este pronume.' },
+      { q: 'Care este opusul cuvântului „harnic"?', o: ['silitor', 'lenes', 'viteaz', 'blând'], c: 1, e: 'Opusul lui „harnic" (care muncește mult) este „leneș".' },
+      { q: 'Care propoziție este scrisă corect?', o: ['Eu sa dus.', 'Eu s-a dus.', 'Eu s-au dus.', 'Eu m-am dus.'], c: 3, e: 'Corect este „Eu m-am dus." (folosim „m-am", nu „sa / s-a / s-au").' },
+      { q: '„a alerga" este un…', o: ['substantiv', 'verb', 'adjectiv', 'pronume'], c: 1, e: '„a alerga" arată o acțiune, deci este verb.' }
     ]
   };
 
   // construiește o întrebare cu răspunsul corect marcat după amestecare
-  function mk(q, options, correctValue) {
+  function mk(q, options, correctValue, explain) {
     const o = shuffle(options);
-    return { q: q, o: o, c: o.indexOf(correctValue) };
+    return { q: q, o: o, c: o.indexOf(correctValue), e: explain || '' };
   }
 
   function countChar(word, ch) {
@@ -199,29 +199,35 @@ window.CONTENT = (function () {
     const qs = [];
 
     // 1) care este litera
-    qs.push(mk('Care este litera „' + letter + '" ?', [letter, other[0], other[1], other[2]], letter));
+    qs.push(mk('Care este litera „' + letter + '" ?', [letter, other[0], other[1], other[2]], letter,
+      'Litera „' + letter + '" este un sunet din alfabetul românesc.'));
 
     // 2) care cuvânt conține litera
-    qs.push(mk('Care cuvânt conține litera „' + letter + '" ?', [first, distractors[0], distractors[1], distractors[2]], first));
+    qs.push(mk('Care cuvânt conține litera „' + letter + '" ?', [first, distractors[0], distractors[1], distractors[2]], first,
+      'Cuvântul „' + first + '" conține litera „' + letter + '".'));
 
     // 3) început sau apariții
     if (first.charAt(0).toLowerCase() === lower) {
-      qs.push(mk('Cu ce literă începe cuvântul „' + first + '" ?', [letter, other[0], other[1], other[2]], letter));
+      qs.push(mk('Cu ce literă începe cuvântul „' + first + '" ?', [letter, other[0], other[1], other[2]], letter,
+        '„' + first + '" începe cu litera „' + letter + '".'));
     } else {
       const cnt = countChar(first, lower);
       qs.push(mk('De câte ori apare litera „' + letter + '" în „' + first + '" ?',
         shuffle([String(cnt), String(cnt + 1), String(Math.max(1, cnt - 1)), String(cnt + 2)]),
-        String(cnt)));
+        String(cnt),
+        'Litera „' + letter + '" apare de ' + cnt + ' ori în „' + first + '".'));
     }
 
     // 4) câte litere are
     const len = first.length;
     qs.push(mk('Câte litere are cuvântul „' + first + '" ?',
-      [String(len), String(len + 1), String(Math.max(1, len - 1)), String(len + 2)], String(len)));
+      [String(len), String(len + 1), String(Math.max(1, len - 1)), String(len + 2)], String(len),
+      '„' + first + '" are ' + len + ' litere: ' + first.split('').join('-') + '.'));
 
     // 5) care NU conține litera
     qs.push(mk('Care cuvânt NU conține litera „' + letter + '" ?',
-      [distractors[0], first, words[1][0], words[2][0]], distractors[0]));
+      [distractors[0], first, words[1][0], words[2][0]], distractors[0],
+      '„' + distractors[0] + '" nu conține litera „' + letter + '".'));
 
     // 6) întrebare generală (stabilă per lecție)
     qs.push(QUIZ_BANK[0][hash(letter) % QUIZ_BANK[0].length]);
@@ -247,14 +253,16 @@ window.CONTENT = (function () {
   }
 
   // ---------- activitate „numara" (numără obiecte) ----------
+  const EMOJI_NAME = { '🍎': 'mere', '⭐': 'stele', '🐤': 'pui', '🌼': 'flori', '🎈': 'baloane', '🍪': 'prăjituri', '🐟': 'pești', '⚽': 'mingi' };
+
   function numaraActivity(cls) {
     const cap = cls === 0 ? 6 : cls === 1 ? 10 : cls === 2 ? 20 : 50;
     const emoji = ['🍎', '⭐', '🐤', '🌼', '🎈', '🍪', '🐟', '⚽'];
     const rounds = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 7; i++) {
       const n = 1 + Math.floor(Math.random() * cap);
       const e = emoji[Math.floor(Math.random() * emoji.length)];
-      rounds.push({ n: n, e: e, ans: n });
+      rounds.push({ n: n, e: e, ans: n, why: 'Sunt exact ' + n + ' ' + EMOJI_NAME[e] + ' în imagine. Numără-le încă o dată, unul câte unul.' });
     }
     return { type: 'numara', rounds: rounds };
   }
@@ -262,8 +270,19 @@ window.CONTENT = (function () {
   // ---------- flash aritmetic (clasele 1–4) ----------
   function flashActivity(cls) {
     const rounds = [];
-    for (let i = 0; i < 6; i++) rounds.push(arithFor(cls));
+    for (let i = 0; i < 7; i++) {
+      const r = arithFor(cls);
+      r.why = explainArith(r);
+      rounds.push(r);
+    }
     return { type: 'flash', rounds: rounds };
+  }
+
+  function explainArith(r) {
+    if (r.op === '+') return r.a + ' + ' + r.b + ' = ' + r.ans + '. Pornim de la ' + r.a + ' și adunăm ' + r.b + '.';
+    if (r.op === '-') return r.a + ' − ' + r.b + ' = ' + r.ans + '. Luăm ' + r.b + ' din ' + r.a + ' și rămân ' + r.ans + '.';
+    if (r.op === '×') return r.a + ' × ' + r.b + ' = ' + r.ans + ' (' + r.a + ' adunat de ' + r.b + ' ori).';
+    return r.a + ' : ' + r.b + ' = ' + r.ans + ', pentru că ' + r.ans + ' × ' + r.b + ' = ' + r.a + '.';
   }
 
   function arithFor(cls) {
@@ -308,17 +327,25 @@ window.CONTENT = (function () {
     { items: [['roșu', '🔴'], ['albastru', '🔵'], ['verde', '🟢'], ['minge', '⚽']], odd: 3, hint: 'culorile' },
     { items: [['floare', '🌸'], ['copac', '🌳'], ['iarbă', '🌱'], ['telefon', '📱']], odd: 3, hint: 'plantele' },
     { items: [['iarnă', '❄️'], ['vară', '☀️'], ['toamnă', '🍂'], ['carte', '📖']], odd: 3, hint: 'anotimpurile' },
-    { items: [['tren', '🚂'], ['mașină', '🚗'], ['autobuz', '🚌'], ['pantof', '👟']], odd: 3, hint: 'mijloacele de transport' }
+    { items: [['tren', '🚂'], ['mașină', '🚗'], ['autobuz', '🚌'], ['pantof', '👟']], odd: 3, hint: 'mijloacele de transport' },
+    { items: [['carte', '📖'], ['caiet', '📓'], ['stilou', '🖊️'], ['banană', '🍌']], odd: 3, hint: 'lucrurile de școală' },
+    { items: [['cămașă', '👔'], ['pantaloni', '👖'], ['rochie', '👗'], ['bomboană', '🍬']], odd: 3, hint: 'hainele' },
+    { items: [['pâine', '🍞'], ['lapte', '🥛'], ['brânză', '🧀'], ['păpușă', '🪆']], odd: 3, hint: 'alimentele' }
   ];
 
   function intrusActivity() {
-    const sets = shuffle(INTRUS_SETS).slice(0, 4);
+    const sets = shuffle(INTRUS_SETS).slice(0, 6);
     return {
       type: 'intrus',
       rounds: sets.map(function (s) {
-        const oddItem = s.items[s.odd];
+        const oddName = s.items[s.odd][0];
         const shuffled = shuffle(s.items);
-        return { items: shuffled, odd: shuffled.indexOf(oddItem), hint: s.hint };
+        return {
+          items: shuffled,
+          odd: shuffled.indexOf(s.items[s.odd]),
+          hint: s.hint,
+          why: '„' + oddName + '" este intrusul, pentru că toate celelalte sunt ' + s.hint + '.'
+        };
       })
     };
   }
@@ -335,7 +362,7 @@ window.CONTENT = (function () {
       activity = {
         type: 'cuvinte',
         letter: letter,
-        target: words.slice(0, 3),
+        target: words.slice(0, 4),
         distractors: pickDistractors(letter, 3),
         emoji: words[0][1]
       };
