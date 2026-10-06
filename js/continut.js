@@ -640,17 +640,433 @@ window.CONTENT = (function () {
     return fin(f[0], numOpts(f[1], rng, 0, 400), String(f[1]), f[2]);
   }
 
+  // ---------- helperi suplimentari ----------
+  function digitAt(num, place) { return Math.floor(num / place) % 10; }
+  function hasAny(str, list) { for (let i = 0; i < list.length; i++) { if (str.indexOf(list[i]) >= 0) return true; } return false; }
+  function cmpSet(big, small, rng) {
+    const s = [big, small];
+    let g = 0;
+    while (s.length < 4 && g++ < 100) {
+      const d = irand(rng, 1, 999);
+      const v = rng() < 0.5 ? big + d : Math.max(0, small - d);
+      if (s.indexOf(v) === -1) s.push(v);
+    }
+    let k = 1;
+    while (s.length < 4) { const v = big + k * 10; if (s.indexOf(v) === -1) s.push(v); k++; }
+    return srng(s, rng).map(String);
+  }
+
+  // ============================================================
+  //  TEME — potrivirea lecției cu subiectul ei (aprofundare)
+  // ============================================================
+  function topicOf(n, item) {
+    const d = ((item.d || '') + '').toLowerCase();
+    const tl = ((item.t || '') + '').toLowerCase();
+    if (d.indexOf('mat') === 0) {
+      if (tl.indexOf('numere') >= 0) return 'numere';
+      if (tl.indexOf('adunare') >= 0 || tl.indexOf('scădere') >= 0) return 'adunare';
+      if (tl.indexOf('înmulțire') >= 0) return 'inmultire';
+      if (tl.indexOf('împărțire') >= 0) return 'impartire';
+      if (tl.indexOf('fracț') >= 0) return 'fractii';
+      if (tl.indexOf('geometrie') >= 0) return 'geometrie';
+      if (tl.indexOf('măsur') >= 0) return 'masura';
+      if (tl.indexOf('problem') >= 0) return 'probleme';
+      return 'recap-mate';
+    }
+    if (d.indexOf('ști') === 0 || d.indexOf('sti') === 0) {
+      if (tl.indexOf('pământ') >= 0 || tl.indexOf('păm') >= 0) return 'pamant';
+      if (tl.indexOf('fizic') >= 0) return 'fizica';
+      if (tl.indexOf('vie') >= 0 || tl.indexOf('viaț') >= 0) return 'lumea-vie';
+      return 'stiinte';
+    }
+    if (n <= 2) {
+      if (hasAny(tl, ['animal'])) return 'animale';
+      if (hasAny(tl, ['plant', 'flor'])) return 'plante';
+      if (hasAny(tl, ['toamn', 'iarn', 'primăvar', 'vara', 'vară', 'verii'])) return 'anotimpuri';
+      if (hasAny(tl, ['stea', 'stel', 'planet', 'astr'])) return 'spatiu';
+    }
+    return null;
+  }
+
+  // ---------- NUMERE NATURALE (ordine, comparație, cifre, rotunjire) ----------
+  function numbersQ(n, rng) {
+    const max = n === 4 ? 1000000 : 10000;
+    const t = Math.floor(rng() * 6);
+    if (t === 0) {
+      let a = irand(rng, 100, max), b = irand(rng, 100, max);
+      if (a === b) b = a + irand(rng, 1, 999);
+      const big = Math.max(a, b), small = Math.min(a, b);
+      return fin('Care este cel mai mare număr dintre ' + a + ' și ' + b + '?', cmpSet(big, small, rng), String(big), big + ' este mai mare decât ' + small + '. Comparăm întâi numărul de cifre, apoi cifră cu cifră, de la stânga.');
+    }
+    if (t === 1) {
+      const a = irand(rng, 10, max - 10);
+      return fin('Care este succesorul lui ' + a + '?', numOpts(a + 1, rng, 0, max), String(a + 1), 'Succesorul lui ' + a + ' este ' + (a + 1) + ' (adăugăm 1).');
+    }
+    if (t === 2) {
+      const a = irand(rng, 100, max);
+      return fin('Care este predecesorul lui ' + a + '?', numOpts(a - 1, rng, 0, max), String(a - 1), 'Predecesorul lui ' + a + ' este ' + (a - 1) + ' (scădem 1).');
+    }
+    if (t === 3) {
+      const a = irand(rng, 1000, n === 4 ? 999999 : 9999);
+      const p = spick(rng, [[1000, 'miilor'], [100, 'sutelor'], [10, 'zecilor'], [1, 'unităților']]);
+      const digit = digitAt(a, p[0]);
+      return fin('Ce cifră se află pe locul ' + p[1] + ' în numărul ' + a + '?', numOpts(digit, rng, 0, 9), String(digit), 'În numărul ' + a + ', cifra de pe locul ' + p[1] + ' este ' + digit + '.');
+    }
+    if (t === 4) {
+      const unit = spick(rng, [10, 100, 1000]);
+      const a = irand(rng, 500, max);
+      const ans = Math.round(a / unit) * unit;
+      const nume = unit === 10 ? 'zeci' : unit === 100 ? 'sute' : 'mii';
+      return fin('Rotunjește numărul ' + a + ' la ' + nume + '.', numOpts(ans, rng, 0, max), String(ans), 'Rotunjim ' + a + ' la cea mai apropiată valoare de ' + unit + ': ' + ans + '.');
+    }
+    const mii = irand(rng, 1, n === 4 ? 999 : 9);
+    const sute = irand(rng, 0, 9), zeci = irand(rng, 0, 9), unitati = irand(rng, 0, 9);
+    const ans = mii * 1000 + sute * 100 + zeci * 10 + unitati;
+    return fin('Ce număr se formează din ' + mii + ' mii, ' + sute + ' sute, ' + zeci + ' zeci și ' + unitati + ' unități?', numOpts(ans, rng, 0, max), String(ans), 'Compunem: ' + mii + '×1000 + ' + sute + '×100 + ' + zeci + '×10 + ' + unitati + ' = ' + ans + '.');
+  }
+
+  // ---------- ADUNARE / SCĂDERE ----------
+  function addSubQ(n, rng) {
+    const max = n === 4 ? 1000000 : 10000;
+    const t = Math.floor(rng() * 4);
+    if (t === 0) {
+      const a = irand(rng, 1000, max - 1000), b = irand(rng, 100, max - a);
+      const ans = a + b;
+      return fin('Cât face ' + a + ' + ' + b + '?', numOpts(ans, rng, 0, max), String(ans), a + ' + ' + b + ' = ' + ans + '.');
+    }
+    if (t === 1) {
+      const a = irand(rng, 1000, max), b = irand(rng, 100, a);
+      const ans = a - b;
+      return fin('Cât face ' + a + ' − ' + b + '?', numOpts(ans, rng, 0, max), String(ans), a + ' − ' + b + ' = ' + ans + '.');
+    }
+    if (t === 2) {
+      const hi = n === 4 ? 200000 : 3000;
+      const a = irand(rng, 100, hi), b = irand(rng, 100, hi), c = irand(rng, 10, hi);
+      const ans = a + b + c;
+      return fin('Cât face ' + a + ' + ' + b + ' + ' + c + '?', numOpts(ans, rng, 0, max), String(ans), a + ' + ' + b + ' + ' + c + ' = ' + ans + '.');
+    }
+    const y = irand(rng, 100, max - 2000), x = irand(rng, 10, 1999);
+    const ans = y + x;
+    return fin('Care este numărul cu ' + x + ' mai mare decât ' + y + '?', numOpts(ans, rng, 0, max), String(ans), 'Adunăm: ' + y + ' + ' + x + ' = ' + ans + '.');
+  }
+
+  // ---------- ÎNMULȚIRE ----------
+  function multQ(n, rng) {
+    const t = Math.floor(rng() * 4);
+    if (t === 0) {
+      const a = irand(rng, 3, 9), b = irand(rng, 3, 9);
+      const ans = a * b;
+      return fin('Cât face ' + a + ' × ' + b + '?', numOpts(ans, rng, 0, 100), String(ans), a + ' × ' + b + ' = ' + ans + '.');
+    }
+    if (t === 1) {
+      const a = irand(rng, 5, n === 4 ? 500 : 50), k = irand(rng, 2, 4);
+      const ans = a * k;
+      const name = k === 2 ? 'dublul' : k === 3 ? 'triplul' : 'împătritul';
+      return fin('Cât este ' + name + ' lui ' + a + '?', numOpts(ans, rng, 0, ans + 500), String(ans), name + ' lui ' + a + ' = ' + a + ' × ' + k + ' = ' + ans + '.');
+    }
+    if (t === 2) {
+      const a = irand(rng, 2, 99), m = spick(rng, [10, 100]);
+      const ans = a * m;
+      return fin('Cât face ' + a + ' × ' + m + '?', numOpts(ans, rng, 0, ans + 10000), String(ans), 'Înmulțind cu ' + m + ' adăugăm un zero la ' + a + ': ' + ans + '.');
+    }
+    const a = irand(rng, 10, 99), b = irand(rng, 10, 99);
+    const ans = a * b;
+    return fin('Cât face ' + a + ' × ' + b + '?', numOpts(ans, rng, 0, 10000), String(ans), a + ' × ' + b + ' = ' + ans + '.');
+  }
+
+  // ---------- ÎMPĂRȚIRE ----------
+  function divQ(n, rng) {
+    const t = Math.floor(rng() * 3);
+    if (t === 0) {
+      const b = irand(rng, 3, 9), q = irand(rng, 3, 9);
+      const a = b * q;
+      return fin('Cât face ' + a + ' : ' + b + '?', numOpts(q, rng, 0, 20), String(q), a + ' : ' + b + ' = ' + q + ', pentru că ' + q + ' × ' + b + ' = ' + a + '.');
+    }
+    if (t === 1) {
+      const f = spick(rng, [2, 4]);
+      const a = irand(rng, 2, 50) * f;
+      const ans = a / f;
+      const name = f === 2 ? 'jumătatea' : 'sfertul';
+      return fin('Cât este ' + name + ' lui ' + a + '?', numOpts(ans, rng, 0, 100), String(ans), name + ' lui ' + a + ' = ' + a + ' : ' + f + ' = ' + ans + '.');
+    }
+    const b = irand(rng, 3, n === 4 ? 25 : 10), q = irand(rng, 5, n === 4 ? 200 : 10);
+    const a = b * q;
+    return fin('Cât face ' + a + ' : ' + b + '?', numOpts(q, rng, 0, n === 4 ? 200 : 15), String(q), a + ' : ' + b + ' = ' + q + '.');
+  }
+
+  // ---------- FRACȚII ----------
+  const FRAC_EQ = [
+    { q: 'Care fracție este egală cu 1/2?', o: ['2/4', '1/3', '2/3', '3/4'], c: 0, e: '1/2 = 2/4, pentru că dublăm și numărătorul și numitorul.' },
+    { q: 'Care fracție este egală cu 1/3?', o: ['2/6', '1/2', '3/4', '2/3'], c: 0, e: '1/3 = 2/6.' },
+    { q: 'Care fracție este egală cu 1/4?', o: ['2/8', '1/2', '3/4', '2/4'], c: 0, e: '1/4 = 2/8.' },
+    { q: 'Care fracție este egală cu 2/4?', o: ['1/2', '1/4', '2/3', '3/4'], c: 0, e: '2/4 = 1/2 (simplificăm cu 2).' },
+    { q: 'Care fracție este egală cu 3/6?', o: ['1/2', '1/3', '2/3', '3/4'], c: 0, e: '3/6 = 1/2.' },
+    { q: 'Care fracție este egală cu 6/8?', o: ['3/4', '1/2', '2/3', '1/4'], c: 0, e: '6/8 = 3/4.' }
+  ];
+
+  function fractionsQ(n, rng) {
+    const t = Math.floor(rng() * 5);
+    if (t === 0) {
+      const a = irand(rng, 2, 50) * 2;
+      return fin('Cât este 1/2 din ' + a + '?', numOpts(a / 2, rng, 0, 100), String(a / 2), '1/2 din ' + a + ' = ' + a + ' : 2 = ' + (a / 2) + '.');
+    }
+    if (t === 1) {
+      const a = irand(rng, 2, 25) * 4;
+      return fin('Cât este 1/4 din ' + a + '?', numOpts(a / 4, rng, 0, 40), String(a / 4), '1/4 din ' + a + ' = ' + a + ' : 4 = ' + (a / 4) + '.');
+    }
+    if (t === 2) {
+      const k = irand(rng, 2, 10), a = k * 4;
+      return fin('Cât reprezintă 3/4 din ' + a + '?', numOpts(k * 3, rng, 0, 50), String(k * 3), '3/4 din ' + a + ' = ' + a + ' : 4 = ' + k + ', apoi × 3 = ' + (k * 3) + '.');
+    }
+    if (t === 3) {
+      const list = [['1/2', 0.5], ['1/4', 0.25], ['1/3', 0.333], ['3/4', 0.75], ['2/3', 0.667], ['1/8', 0.125]];
+      const names = list.map(function (x) { return x[0]; });
+      let f1 = spick(rng, list), f2 = spick(rng, list);
+      if (f1[0] === f2[0]) f2 = list[(list.indexOf(f2) + 1) % list.length];
+      const bigger = f1[1] > f2[1] ? f1[0] : f2[0];
+      const smaller = f1[0] === bigger ? f2[0] : f1[0];
+      return fin('Care fracție este mai mare: ' + f1[0] + ' sau ' + f2[0] + '?', wordOpts(bigger, names, rng), bigger, bigger + ' este mai mare decât ' + smaller + '.');
+    }
+    return spick(rng, FRAC_EQ);
+  }
+
+  // ---------- GEOMETRIE ----------
+  const GEO_BANK = [
+    { q: 'Câte grade are un unghi drept?', o: ['45', '60', '90', '180'], c: 2, e: 'Un unghi drept are 90 de grade.' },
+    { q: 'Ce figură are 4 laturi egale și 4 unghiuri drepte?', o: ['Dreptunghiul', 'Pătratul', 'Triunghiul', 'Cercul'], c: 1, e: 'Pătratul are 4 laturi egale și 4 unghiuri drepte.' },
+    { q: 'Cercul…', o: ['are laturi', 'are vârfuri', 'nu are laturi, are rază', 'are colțuri'], c: 2, e: 'Cercul nu are laturi; are centru, rază și diametru.' },
+    { q: 'Ce unește centrul cercului cu un punct de pe cerc?', o: ['Raza', 'Latura', 'Vârful', 'Diagonala'], c: 0, e: 'Raza unește centrul cu un punct de pe cerc.' },
+    { q: 'Câte vârfuri are un triunghi?', o: ['2', '3', '4', '5'], c: 1, e: 'Triunghiul are 3 vârfuri și 3 laturi.' },
+    { q: 'Care figură are toate laturile egale, dar nu neapărat unghiuri drepte?', o: ['Dreptunghiul', 'Pătratul', 'Rombul', 'Cercul'], c: 2, e: 'Rombul are toate laturile egale.' },
+    { q: 'Ce este o dreaptă?', o: ['O linie fără început și fără sfârșit', 'Un punct', 'Un segment cu capete', 'Un colț'], c: 0, e: 'Dreapta este o linie infinită, fără capete.' },
+    { q: 'Perimetrul înseamnă…', o: ['suprafața din interior', 'lungimea conturului', 'volumul', 'greutatea'], c: 1, e: 'Perimetrul este suma lungimilor tuturor laturilor (conturul).' },
+    { q: 'Câte laturi egale are un triunghi echilateral?', o: ['1', '2', '3', '4'], c: 2, e: 'Triunghiul echilateral are toate cele 3 laturi egale.' },
+    { q: 'Ce este un segment de dreaptă?', o: ['O porțiune de dreaptă cu două capete', 'O dreaptă infinită', 'Un cerc', 'O rază infinită'], c: 0, e: 'Segmentul este o porțiune de dreaptă delimitată de două capete.' }
+  ];
+
+  function geometryQ(n, rng) {
+    const t = Math.floor(rng() * 5);
+    if (t === 0) {
+      const l = irand(rng, 3, 50);
+      const ans = 4 * l;
+      return fin('Cât este perimetrul unui pătrat cu latura de ' + l + ' cm?', numOpts(ans, rng, 0, 400), String(ans), 'Perimetrul pătratului = 4 × l = 4 × ' + l + ' = ' + ans + ' cm.');
+    }
+    if (t === 1) {
+      const L = irand(rng, 5, 50), l = irand(rng, 2, L - 1);
+      const ans = 2 * (L + l);
+      return fin('Cât este perimetrul unui dreptunghi cu lungimea ' + L + ' cm și lățimea ' + l + ' cm?', numOpts(ans, rng, 0, 400), String(ans), 'Perimetrul dreptunghiului = 2 × (L + l) = 2 × ' + (L + l) + ' = ' + ans + ' cm.');
+    }
+    if (t === 2) {
+      const p = spick(rng, [['triunghi', 3], ['pătrat', 4], ['dreptunghi', 4], ['pentagon', 5], ['hexagon', 6]]);
+      return fin('Câte laturi are un ' + p[0] + '?', numOpts(p[1], rng, 0, 8), String(p[1]), 'Un ' + p[0] + ' are ' + p[1] + ' laturi.');
+    }
+    if (t === 3) {
+      return spick(rng, GEO_BANK);
+    }
+    const l = irand(rng, 2, 20);
+    const ans = l * l;
+    return fin('Cât este aria unui pătrat cu latura de ' + l + ' cm?', numOpts(ans, rng, 0, 400), String(ans), 'Aria pătratului = l × l = ' + l + ' × ' + l + ' = ' + ans + ' cm².');
+  }
+
+  // ---------- UNITĂȚI DE MĂSURĂ ----------
+  const MEASURE_BANK = [
+    { q: 'Câți centimetri are un metru?', o: ['10', '100', '1000', '50'], c: 1, e: 'Un metru are 100 de centimetri.' },
+    { q: 'Câți metri are un kilometru?', o: ['100', '1000', '10000', '500'], c: 1, e: 'Un kilometru are 1000 de metri.' },
+    { q: 'Câte grame are un kilogram?', o: ['100', '1000', '10', '500'], c: 1, e: 'Un kilogram are 1000 de grame.' },
+    { q: 'Câți mililitri are un litru?', o: ['100', '1000', '10', '500'], c: 1, e: 'Un litru are 1000 de mililitri.' },
+    { q: 'Ce măsurăm cu termometrul?', o: ['Temperatura', 'Lungimea', 'Masa', 'Timpul'], c: 0, e: 'Termometrul măsoară temperatura.' },
+    { q: 'Ce măsurăm în litri?', o: ['Lichidele', 'Lungimea', 'Timpul', 'Masa'], c: 0, e: 'În litri măsurăm lichidele (apă, lapte, suc).' },
+    { q: 'Câte zile are o săptămână?', o: ['5', '6', '7', '8'], c: 2, e: 'O săptămână are 7 zile.' },
+    { q: 'Câte luni are un an?', o: ['10', '11', '12', '13'], c: 2, e: 'Un an are 12 luni.' },
+    { q: 'Câte minute are o oră?', o: ['30', '45', '60', '90'], c: 2, e: 'O oră are 60 de minute.' },
+    { q: 'Ce instrument măsoară timpul?', o: ['Ceasul', 'Rigla', 'Cântarul', 'Termometrul'], c: 0, e: 'Ceasul măsoară timpul.' },
+    { q: 'Cu ce măsurăm masa unui obiect?', o: ['Cântarul', 'Rigla', 'Ceasul', 'Litrul'], c: 0, e: 'Cântarul măsoară masa (cât de greu e un obiect).' },
+    { q: 'Câte ore are o zi?', o: ['12', '24', '36', '48'], c: 1, e: 'O zi are 24 de ore.' },
+    { q: 'Câte zile are un an bisect?', o: ['364', '365', '366', '367'], c: 2, e: 'Un an bisect are 366 de zile.' },
+    { q: 'Ce unitate folosim pentru distanțe mari (între orașe)?', o: ['Centimetri', 'Kilometri', 'Milimetri', 'Litri'], c: 1, e: 'Pentru distanțe mari folosim kilometri.' },
+    { q: 'Câți centimetri are un decimetru?', o: ['1', '10', '100', '1000'], c: 1, e: 'Un decimetru are 10 centimetri.' }
+  ];
+  const MEASURE_CONV = [['m', 'cm', 100], ['km', 'm', 1000], ['kg', 'g', 1000], ['l', 'ml', 1000]];
+
+  function measureQ(rng) {
+    if (rng() < 0.65) return spick(rng, MEASURE_BANK);
+    const c = spick(rng, MEASURE_CONV);
+    const a = irand(rng, 2, 25);
+    const ans = a * c[2];
+    return fin('Câți ' + c[1] + ' are ' + a + ' ' + c[0] + '?', numOpts(ans, rng, 0, ans + 2000), String(ans), '1 ' + c[0] + ' = ' + c[2] + ' ' + c[1] + '; deci ' + a + ' ' + c[0] + ' = ' + a + ' × ' + c[2] + ' = ' + ans + ' ' + c[1] + '.');
+  }
+
+  // ---------- PROBLEME (cu text) ----------
+  function wordProblemQ(n, rng) {
+    const t = Math.floor(rng() * 5);
+    if (t === 0) {
+      const a = irand(rng, 10, 500), b = irand(rng, 10, 500);
+      const ans = a + b;
+      return fin('Ana are ' + a + ' lei și mai primește ' + b + ' lei. Câți lei are acum?', numOpts(ans, rng, 0, 2000), String(ans), 'Adunăm: ' + a + ' + ' + b + ' = ' + ans + ' lei.');
+    }
+    if (t === 1) {
+      const a = irand(rng, 100, 1000), b = irand(rng, 10, a);
+      const ans = a - b;
+      return fin('Într-un coș sunt ' + a + ' mere. Se iau ' + b + '. Câte mere rămân?', numOpts(ans, rng, 0, 1000), String(ans), 'Scădem: ' + a + ' − ' + b + ' = ' + ans + ' mere.');
+    }
+    if (t === 2) {
+      const a = irand(rng, 3, 50), b = irand(rng, 3, 12);
+      const ans = a * b;
+      return fin('Un caiet costă ' + a + ' lei. Cât costă ' + b + ' caiete?', numOpts(ans, rng, 0, 2000), String(ans), 'Înmulțim: ' + a + ' × ' + b + ' = ' + ans + ' lei.');
+    }
+    if (t === 3) {
+      const b = irand(rng, 3, 9), q = irand(rng, 4, 20);
+      const a = b * q;
+      return fin('Se împart ' + a + ' bomboane în mod egal la ' + b + ' copii. Câte primește fiecare?', numOpts(q, rng, 0, 100), String(q), 'Împărțim: ' + a + ' : ' + b + ' = ' + q + ' bomboane.');
+    }
+    const a = irand(rng, 20, 500), b = irand(rng, 10, a);
+    const ans = a - b;
+    return fin('Maria are ' + a + ' timbre, iar Ion are ' + b + '. Cu cât are mai multe Maria?', numOpts(ans, rng, 0, 1000), String(ans), 'Diferența: ' + a + ' − ' + b + ' = ' + ans + ' timbre.');
+  }
+
+  // ---------- ȘTIINȚE PE TEME ----------
+  const SCIENCE_TOPIC = {
+    'lumea-vie': [
+      { q: 'Ce are nevoie o plantă ca să crească?', o: ['Lumină, apă și pământ', 'Doar piatră', 'Doar aer rece', 'Doar întuneric'], c: 0, e: 'Planta are nevoie de lumină, apă și pământ ca să crească.' },
+      { q: 'Cum se numește procesul prin care plantele produc hrană?', o: ['Respirație', 'Fotosinteză', 'Digestie', 'Evaporare'], c: 1, e: 'Fotosinteza e procesul prin care plantele produc hrană cu ajutorul Soarelui.' },
+      { q: 'Care parte a plantei absoarbe apa din pământ?', o: ['Frunza', 'Floarea', 'Rădăcina', 'Tulpina'], c: 2, e: 'Rădăcina absoarbe apa și substanțele hrănitoare din pământ.' },
+      { q: 'Care animal respiră prin branhii?', o: ['Peștele', 'Pisica', 'Vaca', 'Găina'], c: 0, e: 'Peștii respiră prin branhii.' },
+      { q: 'Cum se numesc animalele care mănâncă doar plante?', o: ['Carnivore', 'Erbivore', 'Omnivore', 'Insecte'], c: 1, e: 'Erbivorele mănâncă doar plante (de exemplu vaca, iepurele).' },
+      { q: 'Cum se numesc animalele care mănâncă alte animale?', o: ['Erbivore', 'Carnivore', 'Plante', 'Fructe'], c: 1, e: 'Carnivorele mănâncă alte animale (de exemplu leul, lupul).' },
+      { q: 'Ce organ pompează sângele în corp?', o: ['Plămânii', 'Inima', 'Creierul', 'Stomacul'], c: 1, e: 'Inima pompează sângele în tot corpul.' },
+      { q: 'Cu ce organ respirăm?', o: ['Inima', 'Plămânii', 'Stomacul', 'Rinichii'], c: 1, e: 'Respirăm cu plămânii.' },
+      { q: 'Cu ce organ vedem?', o: ['Urechea', 'Ochii', 'Nasul', 'Limba'], c: 1, e: 'Vedem cu ochii.' },
+      { q: 'Cum se numește transformarea unui mormoloc în broască?', o: ['Metamorfoză', 'Fotosinteză', 'Evaporare', 'Digestie'], c: 0, e: 'Metamorfoza e transformarea prin care mormolocul devine broască.' },
+      { q: 'Ce păsări migrează iarna spre țări calde?', o: ['Rândunelele', 'Vrăbiile', 'Găinile', 'Gâștele domestice'], c: 0, e: 'Rândunelele (și berzele) migrează iarna spre țări calde.' },
+      { q: 'Din ce se dezvoltă o plantă?', o: ['Din sămânță', 'Din piatră', 'Din nisip', 'Din metal'], c: 0, e: 'Planta se dezvoltă din sămânță.' },
+      { q: 'Care este cel mai mare mamifer din lume?', o: ['Elefantul', 'Balena albastră', 'Rechinul', 'Girafa'], c: 1, e: 'Balena albastră este cel mai mare mamifer.' },
+      { q: 'Ce ne ajută să auzim?', o: ['Ochii', 'Urechile', 'Nasul', 'Limba'], c: 1, e: 'Auzim cu urechile.' },
+      { q: 'Unde trăiesc peștii?', o: ['În deșert', 'În apă', 'În copaci', 'Sub pământ'], c: 1, e: 'Peștii trăiesc în apă.' },
+      { q: 'Ce produc albinele?', o: ['Laptele', 'Mierea', 'Pâinea', 'Brânza'], c: 1, e: 'Albinele produc miere.' },
+      { q: 'Câte picioare are o insectă?', o: ['4', '6', '8', '2'], c: 1, e: 'Insectele au 6 picioare.' },
+      { q: 'Cum se numește puiul de cal?', o: ['Vițel', 'Mânz', 'Ied', 'Pui'], c: 1, e: 'Puiul de cal se numește mânz.' }
+    ],
+    'pamant': [
+      { q: 'Care este planeta pe care trăim?', o: ['Marte', 'Pământul', 'Venus', 'Jupiter'], c: 1, e: 'Trăim pe planeta Pământ.' },
+      { q: 'Ce mișcare a Pământului determină ziua și noaptea?', o: ['Rotația', 'Revoluția', 'Translația', 'Nicio mișcare'], c: 0, e: 'Rotația Pământului în jurul axei sale determină ziua și noaptea.' },
+      { q: 'Cât durează rotația completă a Pământului în jurul axei sale?', o: ['12 ore', '24 ore', '7 zile', '365 zile'], c: 1, e: 'Rotația completă durează 24 de ore (o zi).' },
+      { q: 'Cât durează mișcarea de revoluție a Pământului în jurul Soarelui?', o: ['24 ore', '30 zile', '365 zile', '7 zile'], c: 2, e: 'Revoluția Pământului în jurul Soarelui durează 365 de zile (un an).' },
+      { q: 'Care planetă este a doua de la Soare?', o: ['Marte', 'Venus', 'Pământul', 'Jupiter'], c: 1, e: 'Venus este a doua planetă de la Soare.' },
+      { q: 'Care este satelitul natural al Pământului?', o: ['Soarele', 'Luna', 'Marte', 'Venus'], c: 1, e: 'Luna este satelitul natural al Pământului.' },
+      { q: 'Care este planeta numită „Planeta Roșie"?', o: ['Venus', 'Jupiter', 'Marte', 'Saturn'], c: 2, e: 'Marte este numită „Planeta Roșie" datorită culorii sale.' },
+      { q: 'Ce se formează când apa se evaporă și apoi se condensează în cer?', o: ['Norii', 'Piatra', 'Focul', 'Nisipul'], c: 0, e: 'Norii se formează din vaporii de apă care se condensează.' },
+      { q: 'Ce acoperă cea mai mare parte a suprafeței Pământului?', o: ['Continentele', 'Oceanele', 'Deșerturile', 'Munții'], c: 1, e: 'Oceanele acoperă cea mai mare parte a Pământului (aproximativ 70%).' },
+      { q: 'Ce anotimp urmează după primăvară?', o: ['Toamna', 'Iarna', 'Vara', 'Toate'], c: 2, e: 'După primăvară vine vara.' },
+      { q: 'Ce anotimp urmează după iarnă?', o: ['Toamna', 'Vara', 'Primăvara', 'Toate'], c: 2, e: 'După iarnă vine primăvara.' },
+      { q: 'Ce este un vulcan?', o: ['Un munte care poate arunca lavă', 'Un râu', 'Un lac', 'Un vânt'], c: 0, e: 'Vulcanul este un munte care poate arunca lavă și cenușă.' },
+      { q: 'Care dintre acestea este o planetă?', o: ['Luna', 'Saturn', 'Soarele', 'Cometa'], c: 1, e: 'Saturn este o planetă. Luna e satelit, Soarele e stea.' },
+      { q: 'Ce ne dă Soarele?', o: ['Lumină și căldură', 'Apă', 'Pământ', 'Aer'], c: 0, e: 'Soarele ne dă lumină și căldură.' },
+      { q: 'Care este planeta cea mai apropiată de Soare?', o: ['Venus', 'Marte', 'Mercur', 'Jupiter'], c: 2, e: 'Mercur este planeta cea mai apropiată de Soare.' },
+      { q: 'Cum se numește apa care cade din nori?', o: ['Roua', 'Ploaia', 'Gheața', 'Aburul'], c: 1, e: 'Ploaia este apa care cade din nori.' },
+      { q: 'Ce este un deșert?', o: ['O zonă foarte uscată, cu puțină apă', 'O pădure deasă', 'Un ocean', 'Un munte înalt'], c: 0, e: 'Deșertul este o zonă foarte uscată, cu foarte puțină apă.' },
+      { q: 'Câte planete sunt în Sistemul Solar?', o: ['7', '8', '9', '10'], c: 1, e: 'Sistemul Solar are 8 planete.' }
+    ],
+    'fizica': [
+      { q: 'Ce atrage un magnet?', o: ['Fierul', 'Lemnul', 'Plasticul', 'Hârtia'], c: 0, e: 'Magnetul atrage fierul și alte metale.' },
+      { q: 'În ce stare este apa când îngheață?', o: ['Solidă', 'Lichidă', 'Gaz', 'Fum'], c: 0, e: 'Când îngheață, apa devine gheață → stare solidă.' },
+      { q: 'În ce stare este apa dintr-un pahar obișnuit?', o: ['Solidă', 'Lichidă', 'Gaz', 'Fum'], c: 1, e: 'Apa dintr-un pahar este în stare lichidă.' },
+      { q: 'Cum se numește trecerea apei din lichid în vapori (gaz)?', o: ['Înghețare', 'Evaporare', 'Condensare', 'Topire'], c: 1, e: 'Evaporarea e trecerea apei din lichid în vapori.' },
+      { q: 'Cum se numește trecerea apei din gaz în lichid?', o: ['Evaporare', 'Condensare', 'Topire', 'Fierbere'], c: 1, e: 'Condensarea e trecerea vaporilor înapoi în lichid.' },
+      { q: 'Ce trece prin corpurile transparente?', o: ['Lumina', 'Piatra', 'Apa', 'Metalul'], c: 0, e: 'Lumina trece prin corpurile transparente (sticlă, aer).' },
+      { q: 'Cum se numește întoarcerea luminii de pe o oglindă?', o: ['Reflexia', 'Evaporarea', 'Topirea', 'Condensarea'], c: 0, e: 'Reflexia e întoarcerea luminii de pe o suprafață lucioasă (oglindă).' },
+      { q: 'Un corp care nu lasă lumina să treacă este…', o: ['Transparent', 'Opac', 'Subțire', 'Lichid'], c: 1, e: 'Corpurile opace nu lasă lumina să treacă (de ex. lemnul, piatra).' },
+      { q: 'Ce produce un bec?', o: ['Lumină (și adesea căldură)', 'Apă', 'Sunet', 'Frig'], c: 0, e: 'Becul produce lumină și, adesea, căldură.' },
+      { q: 'Prin ce se propagă sunetul?', o: ['Aer, apă și corpuri solide', 'Doar prin vid', 'Doar prin metal', 'Doar prin lumină'], c: 0, e: 'Sunetul se propagă prin aer, apă și corpuri solide.' },
+      { q: 'De ce cade un obiect la pământ?', o: ['E atras de gravitație', 'Plutește', 'Se topește', 'Rămâne în aer'], c: 0, e: 'Gravitația Pământului atrage obiectele spre sol.' },
+      { q: 'Care corp este atras de magnet?', o: ['Un cui de fier', 'O riglă de plastic', 'Un creion de lemn', 'O foaie de hârtie'], c: 0, e: 'Cuiul de fier este atras de magnet, deci este magnetic.' },
+      { q: 'Ce înseamnă că un corp „plutește" pe apă?', o: ['Stă la suprafața apei', 'Se scufundă', 'Se evaporă', 'Se topește'], c: 0, e: 'A pluti înseamnă a sta la suprafața apei, fără să te scufunzi.' },
+      { q: 'Ce se întâmplă cu gheața când se încălzește?', o: ['Se topește (devine apă)', 'Îngheață mai tare', 'Rămâne la fel', 'Se evaporă direct'], c: 0, e: 'La căldură, gheața se topește și devine apă.' },
+      { q: 'Cum se numește trecerea apei din solid în lichid?', o: ['Topire', 'Înghețare', 'Evaporare', 'Condensare'], c: 0, e: 'Topirea e trecerea din stare solidă în stare lichidă.' },
+      { q: 'Ce folosim ca să măsurăm temperatura?', o: ['Termometrul', 'Rigla', 'Ceasul', 'Cântarul'], c: 0, e: 'Termometrul măsoară temperatura.' },
+      { q: 'Ce produce un instrument muzical?', o: ['Sunete', 'Lumină', 'Căldură', 'Apă'], c: 0, e: 'Un instrument muzical produce sunete.' },
+      { q: 'Ce este electricitatea?', o: ['O formă de energie', 'Un fel de apă', 'Un gaz', 'O piatră'], c: 0, e: 'Electricitatea este o formă de energie.' }
+    ]
+  };
+
+  function scienceTopicQ(topic, rng) {
+    if (rng() < 0.75) return spick(rng, SCIENCE_TOPIC[topic]);
+    const f = spick(rng, SC_FACTS);
+    return fin(f[0], numOpts(f[1], rng, 0, 400), String(f[1]), f[2]);
+  }
+
+  // ---------- teme integrate (clasele 1–2) ----------
+  const THEME_BANK = {
+    'animale': [
+      { q: 'Ce animal spune „ham"?', o: ['Pisica', 'Câinele', 'Vaca', 'Găina'], c: 1, e: 'Câinele spune „ham".' },
+      { q: 'Ce animal spune „miau"?', o: ['Câinele', 'Pisica', 'Calul', 'Peștele'], c: 1, e: 'Pisica spune „miau".' },
+      { q: 'Ce animal ne dă lapte?', o: ['Vaca', 'Câinele', 'Pisica', 'Calul'], c: 0, e: 'Vaca ne dă lapte.' },
+      { q: 'Unde trăiește peștele?', o: ['În copac', 'În apă', 'În deșert', 'Sub pământ'], c: 1, e: 'Peștele trăiește în apă.' },
+      { q: 'Care animal are trunchi lung?', o: ['Elefantul', 'Pisica', 'Vaca', 'Iepurele'], c: 0, e: 'Elefantul are trunchi lung.' },
+      { q: 'Câte picioare are o pisică?', o: ['2', '3', '4', '5'], c: 2, e: 'Pisica are 4 picioare.' },
+      { q: 'Care animal zboară?', o: ['Pasărea', 'Vaca', 'Calul', 'Câinele'], c: 0, e: 'Pasărea zboară.' },
+      { q: 'Ce animal păzește curtea și spune „ham-ham"?', o: ['Câinele', 'Pisica', 'Găina', 'Rața'], c: 0, e: 'Câinele păzește curtea și spune „ham-ham".' }
+    ],
+    'plante': [
+      { q: 'Ce are nevoie o floare ca să crească?', o: ['Apă și lumină', 'Doar piatră', 'Doar întuneric', 'Doar vânt'], c: 0, e: 'Floarea are nevoie de apă și lumină ca să crească.' },
+      { q: 'Unde cresc de obicei copacii?', o: ['În pământ', 'În apă', 'În aer', 'În foc'], c: 0, e: 'Copacii cresc în pământ, cu rădăcini.' },
+      { q: 'Ce culoare au de obicei frunzele vara?', o: ['Verde', 'Roz', 'Albastre', 'Negre'], c: 0, e: 'Vara, frunzele sunt de obicei verzi.' },
+      { q: 'Din ce cresc plantele?', o: ['Din sămânță', 'Din piatră', 'Din metal', 'Din nisip fierbinte'], c: 0, e: 'Plantele cresc din sămânță.' },
+      { q: 'Ce parte a plantei e de obicei sub pământ?', o: ['Rădăcina', 'Floarea', 'Frunza', 'Tulpina'], c: 0, e: 'Rădăcina este sub pământ.' },
+      { q: 'Care dintre acestea este un fruct?', o: ['Mărul', 'Masa', 'Scaunul', 'Creionul'], c: 0, e: 'Mărul este un fruct.' },
+      { q: 'Ce fac albinele cu nectarul florilor?', o: ['Fac miere', 'Fac piatră', 'Fac apă', 'Fac foc'], c: 0, e: 'Albinele fac miere din nectarul și polenul florilor.' },
+      { q: 'În ce anotimp înfloresc cele mai multe flori?', o: ['Primăvara', 'Toamna', 'Iarna', 'Niciodată'], c: 0, e: 'Primăvara înfloresc cele mai multe flori.' }
+    ],
+    'anotimpuri': [
+      { q: 'În ce anotimp cade zăpada?', o: ['Iarna', 'Vara', 'Primăvara', 'Toamna'], c: 0, e: 'Iarna cade zăpada.' },
+      { q: 'În ce anotimp este cel mai cald?', o: ['Iarna', 'Vara', 'Toamna', 'Primăvara'], c: 1, e: 'Vara este cel mai cald anotimp.' },
+      { q: 'În ce anotimp cad frunzele din copaci?', o: ['Primăvara', 'Vara', 'Toamna', 'Iarna'], c: 2, e: 'Toamna cad frunzele din copaci.' },
+      { q: 'În ce anotimp înfloresc florile?', o: ['Primăvara', 'Toamna', 'Iarna', 'Niciodată'], c: 0, e: 'Primăvara înfloresc florile.' },
+      { q: 'Câte anotimpuri are un an?', o: ['3', '4', '5', '2'], c: 1, e: 'Un an are 4 anotimpuri.' },
+      { q: 'Ce anotimp urmează după toamnă?', o: ['Vara', 'Iarna', 'Primăvara', 'Toamna'], c: 1, e: 'După toamnă vine iarna.' },
+      { q: 'Ce anotimp urmează după vară?', o: ['Iarna', 'Toamna', 'Primăvara', 'Vara'], c: 1, e: 'După vară vine toamna.' },
+      { q: 'În ce anotimp facem oameni de zăpadă?', o: ['Vara', 'Iarna', 'Primăvara', 'Toamna'], c: 1, e: 'Iarna facem oameni de zăpadă.' }
+    ],
+    'spatiu': [
+      { q: 'Ce strălucește pe cer noaptea?', o: ['Stelele', 'Merele', 'Florile', 'Casele'], c: 0, e: 'Noaptea strălucesc stelele pe cer.' },
+      { q: 'Cum se numește planeta pe care trăim?', o: ['Marte', 'Pământul', 'Venus', 'Luna'], c: 1, e: 'Trăim pe planeta Pământ.' },
+      { q: 'Ce ne dă lumină ziua?', o: ['Soarele', 'Luna', 'Stelele', 'Norii'], c: 0, e: 'Soarele ne dă lumină ziua.' },
+      { q: 'Ce vezi pe cer noaptea, lângă stele?', o: ['Luna', 'Soarele', 'Norii verzi', 'Curcubeul'], c: 0, e: 'Noaptea vedem Luna pe cer.' },
+      { q: 'Cu ce călătoresc astronauții în spațiu?', o: ['Cu racheta', 'Cu trenul', 'Cu mașina', 'Cu bicicleta'], c: 0, e: 'Astronauții călătoresc cu racheta.' },
+      { q: 'Soarele este…', o: ['o stea', 'o planetă', 'un satelit', 'o piatră'], c: 0, e: 'Soarele este o stea.' },
+      { q: 'Câte planete sunt în Sistemul Solar?', o: ['6', '7', '8', '9'], c: 2, e: 'Sistemul Solar are 8 planete.' },
+      { q: 'Luna este…', o: ['un satelit al Pământului', 'o planetă', 'o stea', 'un nor'], c: 0, e: 'Luna este satelitul natural al Pământului.' }
+    ]
+  };
+
+  function themeQ(topic, rng) {
+    const bank = THEME_BANK[topic];
+    if (bank) return spick(rng, bank);
+    return spick(rng, QUIZ_BANK[1]);
+  }
+
   function genQuestion(n, item, letter, rng) {
     if (n === 0) {
       if (letter && LITERA[letter]) return letterQ(letter, rng);
       return rng() < 0.5 ? countQ(rng) : spick(rng, QUIZ_BANK[0]);
     }
+    const topic = topicOf(n, item);
     if (n <= 2) {
       const r = rng();
-      if (r < 0.55) return mathQ(n, rng);
-      if (r < 0.9) return roQ(n, rng);
-      return spick(rng, QUIZ_BANK[n]);
+      if (topic && r < 0.35) return themeQ(topic, rng);
+      if (r < 0.75) return mathQ(n, rng);
+      return roQ(n, rng);
     }
+    if (topic === 'numere') return numbersQ(n, rng);
+    if (topic === 'adunare') return addSubQ(n, rng);
+    if (topic === 'inmultire') return multQ(n, rng);
+    if (topic === 'impartire') return divQ(n, rng);
+    if (topic === 'fractii') return fractionsQ(n, rng);
+    if (topic === 'geometrie') return geometryQ(n, rng);
+    if (topic === 'masura') return measureQ(rng);
+    if (topic === 'probleme') return wordProblemQ(n, rng);
+    if (topic === 'recap-mate') return mathQ(n, rng);
+    if (topic === 'lumea-vie' || topic === 'pamant' || topic === 'fizica') return scienceTopicQ(topic, rng);
+    if (topic === 'stiinte') return scienceQ(rng);
     const disc = ((item.d || '') + '').toLowerCase();
     if (disc.indexOf('rom') === 0) return roQ(n, rng);
     if (disc.indexOf('mat') === 0) return mathQ(n, rng);
