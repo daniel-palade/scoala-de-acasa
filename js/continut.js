@@ -427,5 +427,255 @@ window.CONTENT = (function () {
     return h;
   }
 
-  return { get: get, LITERA: LITERA };
+  // ============================================================
+  //  GENERARE ZILNICĂ — exerciții + test unic pentru fiecare zi
+  //  Aceeași zi → același conținut; zi diferită → conținut nou.
+  // ============================================================
+
+  function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function irand(rng, lo, hi) { return lo + Math.floor(rng() * (hi - lo + 1)); }
+  function spick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+  function srng(arr, rng) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function numOpts(ans, rng, min, max) {
+    const s = [ans];
+    let g = 0;
+    while (s.length < 4 && g++ < 120) {
+      const d = irand(rng, 1, 9);
+      const v = ans + (rng() < 0.5 ? -d : d);
+      if (v < min || v > max || s.indexOf(v) !== -1) continue;
+      s.push(v);
+    }
+    let k = 1;
+    while (s.length < 4 && k < 40) { const v = ans + k; if (v <= max && s.indexOf(v) === -1) s.push(v); k++; }
+    return srng(s, rng).map(String);
+  }
+  function wordOpts(correct, pool, rng) {
+    const others = pool.filter(function (w) { return w !== correct; });
+    const picked = srng(others, rng).slice(0, 3);
+    return srng([correct].concat(picked), rng);
+  }
+  function fin(q, opts, corr, e) { return { q: q, o: opts, c: opts.indexOf(corr), e: e }; }
+
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  }
+
+  // ---------- Bănci pentru română ----------
+  const RO_WORDS = [
+    ['casă', 'C', 2], ['măr', 'M', 1], ['floare', 'F', 2], ['carte', 'C', 2],
+    ['avion', 'A', 2], ['tren', 'T', 1], ['pisică', 'P', 3], ['soare', 'S', 2],
+    ['copil', 'C', 2], ['mamă', 'M', 2], ['stea', 'S', 1], ['urs', 'U', 1]
+  ];
+  const RO_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'U', 'V'];
+  const RO_ANT = [
+    ['mare', 'mic'], ['înalt', 'scund'], ['cald', 'rece'], ['vesel', 'trist'],
+    ['harnic', 'leneș'], ['rapid', 'lent'], ['luminos', 'întunecat']
+  ];
+  const RO_RIME = [
+    ['soare', 'floare'], ['masă', 'casă'], ['carte', 'noapte'], ['stea', 'cafea'], ['lună', 'cunună']
+  ];
+  const RO_VORBIRE = [
+    ['aleargă', 'verb'], ['frumos', 'adjectiv'], ['copil', 'substantiv'], ['el', 'pronume'],
+    ['carte', 'substantiv'], ['verde', 'adjectiv'], ['citește', 'verb']
+  ];
+
+  // ---------- Bancă științe (clasele 3–4) ----------
+  const SC_BANK = [
+    { q: 'Care este planeta cea mai apropiată de Soare?', o: ['Venus', 'Marte', 'Mercur', 'Jupiter'], c: 2, e: 'Mercur este planeta cea mai apropiată de Soare.' },
+    { q: 'Ce ne dă lumină și căldură pe Pământ?', o: ['Luna', 'Soarele', 'Stelele', 'Cometele'], c: 1, e: 'Soarele ne dă lumină și căldură.' },
+    { q: 'Care organ pompează sângele în corp?', o: ['Plămânii', 'Inima', 'Creierul', 'Stomacul'], c: 1, e: 'Inima pompează sângele în tot corpul.' },
+    { q: 'Care este satelitul natural al Pământului?', o: ['Soarele', 'Luna', 'Marte', 'Venus'], c: 1, e: 'Luna este satelitul natural al Pământului.' },
+    { q: 'Ce atrage un magnet?', o: ['Lemnul', 'Plasticul', 'Fierul', 'Hârtia'], c: 2, e: 'Magnetul atrage fierul și alte metale.' },
+    { q: 'Din ce se face hârtia?', o: ['Fier', 'Lemn', 'Plastic', 'Sticlă'], c: 1, e: 'Hârtia se obține din lemn (pastă de lemn).' },
+    { q: 'Cum se numește procesul prin care plantele produc hrană cu ajutorul Soarelui?', o: ['Respirație', 'Fotosinteză', 'Digestie', 'Evaporare'], c: 1, e: 'Fotosinteza este procesul prin care plantele produc hrană.' },
+    { q: 'Unde trăiesc pinguinii?', o: ['La ecuator', 'La poli', 'În deșert', 'În pădurile tropicale'], c: 1, e: 'Pinguinii trăiesc în zonele reci, la poli.' },
+    { q: 'Care animal respiră prin branhii?', o: ['Peștele', 'Pisica', 'Vaca', 'Găina'], c: 0, e: 'Peștii respiră prin branhii.' },
+    { q: 'Ce strat face pământul fertil?', o: ['Nisipul', 'Vântul', 'Apa', 'Humusul'], c: 3, e: 'Humusul face pământul fertil.' },
+    { q: 'Care este cel mai mare mamifer din lume?', o: ['Elefantul', 'Balena albastră', 'Rechinul', 'Girafa'], c: 1, e: 'Balena albastră este cel mai mare mamifer.' },
+    { q: 'Ce măsurăm cu termometrul?', o: ['Temperatura', 'Lungimea', 'Greutatea', 'Volumul'], c: 0, e: 'Termometrul măsoară temperatura.' },
+    { q: 'Cu ce organ respirăm?', o: ['Inima', 'Plămânii', 'Stomacul', 'Rinichii'], c: 1, e: 'Respirăm cu plămânii.' },
+    { q: 'Care planetă este numită „Planeta Roșie"?', o: ['Venus', 'Jupiter', 'Marte', 'Saturn'], c: 2, e: 'Marte este numită „Planeta Roșie" datorită culorii sale.' },
+    { q: 'Ce se obține când apa îngheață?', o: ['Abur', 'Gheață', 'Ploaie', 'Rouă'], c: 1, e: 'Când apa îngheață se transformă în gheață.' },
+    { q: 'Cu ce organ auzim?', o: ['Ochii', 'Urechea', 'Nasul', 'Limba'], c: 1, e: 'Auzim cu ajutorul urechii.' }
+  ];
+  const SC_FACTS = [
+    ['Câte zile are o săptămână?', 7, 'O săptămână are 7 zile.'],
+    ['Câte luni are un an?', 12, 'Un an are 12 luni.'],
+    ['Câte zile are un an obișnuit?', 365, 'Un an obișnuit are 365 de zile.'],
+    ['Câte ore are o zi?', 24, 'O zi are 24 de ore.'],
+    ['Câte minute are o oră?', 60, 'O oră are 60 de minute.'],
+    ['Câte planete sunt în Sistemul Solar?', 8, 'Sistemul Solar are 8 planete.'],
+    ['Câte picioare are o insectă?', 6, 'Insectele au 6 picioare.']
+  ];
+
+  // ---------- Generatori de întrebări ----------
+  function mathQ(cls, rng) {
+    const t = Math.floor(rng() * 6);
+    if (cls === 1) {
+      if (t === 0) { let a = irand(rng, 2, 20), b = irand(rng, 1, 9); const ans = a + b; return fin('Cât face ' + a + ' + ' + b + '?', numOpts(ans, rng, 0, 40), String(ans), a + ' + ' + b + ' = ' + ans + '.'); }
+      if (t === 1) { let a = irand(rng, 3, 20), b = irand(rng, 1, a); const ans = a - b; return fin('Cât face ' + a + ' − ' + b + '?', numOpts(ans, rng, 0, 40), String(ans), a + ' − ' + b + ' = ' + ans + '.'); }
+      if (t === 2) { let a = irand(rng, 1, 99), b = irand(rng, 1, 99); if (a === b) b = a + 1; const big = Math.max(a, b), small = Math.min(a, b); return fin('Care număr este mai mare: ' + a + ' sau ' + b + '?', numOpts(big, rng, 0, 100), String(big), big + ' este mai mare decât ' + small + '.'); }
+      if (t === 3) { let a = irand(rng, 1, 98); const ans = a + 1; return fin('Care număr urmează după ' + a + '?', numOpts(ans, rng, 0, 100), String(ans), 'După ' + a + ' vine ' + ans + '.'); }
+      if (t === 4) { let a = irand(rng, 1, 9), b = irand(rng, 1, 9), c = irand(rng, 1, 9); const ans = a + b + c; return fin('Cât face ' + a + ' + ' + b + ' + ' + c + '?', numOpts(ans, rng, 0, 30), String(ans), a + ' + ' + b + ' + ' + c + ' = ' + ans + '.'); }
+      let a = irand(rng, 2, 99); const ans = a - 1; return fin('Care număr este înaintea lui ' + a + '?', numOpts(ans, rng, 0, 100), String(ans), 'Înaintea lui ' + a + ' vine ' + ans + '.');
+    }
+    if (cls === 2) {
+      if (t === 0) { let a = irand(rng, 10, 99), b = irand(rng, 2, 40); const ans = a + b; return fin('Cât face ' + a + ' + ' + b + '?', numOpts(ans, rng, 0, 200), String(ans), a + ' + ' + b + ' = ' + ans + '.'); }
+      if (t === 1) { let a = irand(rng, 20, 99), b = irand(rng, 2, a); const ans = a - b; return fin('Cât face ' + a + ' − ' + b + '?', numOpts(ans, rng, 0, 120), String(ans), a + ' − ' + b + ' = ' + ans + '.'); }
+      if (t === 2) { let a = irand(rng, 100, 500), b = irand(rng, 100, 500); if (a === b) b = a + 10; const big = Math.max(a, b), small = Math.min(a, b); return fin('Care număr este mai mare: ' + a + ' sau ' + b + '?', numOpts(big, rng, 0, 600), String(big), big + ' este mai mare decât ' + small + '.'); }
+      if (t === 3) { let a = irand(rng, 2, 50) * 2; const ans = a / 2; return fin('Cât este jumătate din ' + a + '?', numOpts(ans, rng, 0, 60), String(ans), 'Jumătate din ' + a + ' este ' + ans + ' (' + a + ' : 2 = ' + ans + ').'); }
+      if (t === 4) { let a = irand(rng, 2, 50); const ans = a * 2; return fin('Cât este dublul lui ' + a + '?', numOpts(ans, rng, 0, 110), String(ans), 'Dublul lui ' + a + ' este ' + ans + ' (' + a + ' × 2 = ' + ans + ').'); }
+      let a = irand(rng, 1, 9) * 10; const ans = a + 10; return fin('Numără din 10 în 10: după ' + a + ' vine...', numOpts(ans, rng, 0, 120), String(ans), 'Numărând din 10 în 10, după ' + a + ' vine ' + ans + '.');
+    }
+    if (cls === 3) {
+      if (t === 0) { let a = irand(rng, 3, 10), b = irand(rng, 3, 10); const ans = a * b; return fin('Cât face ' + a + ' × ' + b + '?', numOpts(ans, rng, 0, 110), String(ans), a + ' × ' + b + ' = ' + ans + '.'); }
+      if (t === 1) { let b = irand(rng, 3, 9), ans = irand(rng, 3, 9); let a = ans * b; return fin('Cât face ' + a + ' : ' + b + '?', numOpts(ans, rng, 0, 20), String(ans), a + ' : ' + b + ' = ' + ans + ', pentru că ' + ans + ' × ' + b + ' = ' + a + '.'); }
+      if (t === 2) { let a = irand(rng, 100, 999), b = irand(rng, 10, 999); const ans = a + b; return fin('Cât face ' + a + ' + ' + b + '?', numOpts(ans, rng, 0, 2000), String(ans), a + ' + ' + b + ' = ' + ans + '.'); }
+      if (t === 3) { let a = irand(rng, 200, 999), b = irand(rng, 20, 199); const ans = a - b; return fin('Cât face ' + a + ' − ' + b + '?', numOpts(ans, rng, 0, 1000), String(ans), a + ' − ' + b + ' = ' + ans + '.'); }
+      if (t === 4) { let a = irand(rng, 2, 99); const m = rng() < 0.5 ? 10 : 100; const ans = a * m; return fin('Cât face ' + a + ' × ' + m + '?', numOpts(ans, rng, 0, 10000), String(ans), 'Pentru a înmulți cu ' + m + ' adăugăm un zero (sau două) la ' + a + '.'); }
+      let a = irand(rng, 2, 9); const ans = a * 1000; return fin('Cât face ' + a + ' × 1000?', numOpts(ans, rng, 0, 10000), String(ans), a + ' × 1000 = ' + ans + '.');
+    }
+    if (t === 0) { let a = irand(rng, 1000, 99999), b = irand(rng, 100, 9999); const ans = a + b; return fin('Cât face ' + a + ' + ' + b + '?', numOpts(ans, rng, 0, 200000), String(ans), a + ' + ' + b + ' = ' + ans + '.'); }
+    if (t === 1) { let a = irand(rng, 5000, 99999), b = irand(rng, 100, 4999); const ans = a - b; return fin('Cât face ' + a + ' − ' + b + '?', numOpts(ans, rng, 0, 120000), String(ans), a + ' − ' + b + ' = ' + ans + '.'); }
+    if (t === 2) { let a = irand(rng, 11, 99), b = irand(rng, 2, 12); const ans = a * b; return fin('Cât face ' + a + ' × ' + b + '?', numOpts(ans, rng, 0, 2000), String(ans), a + ' × ' + b + ' = ' + ans + '.'); }
+    if (t === 3) { let b = irand(rng, 3, 9), ans = irand(rng, 10, 99); let a = ans * b; return fin('Cât face ' + a + ' : ' + b + '?', numOpts(ans, rng, 0, 110), String(ans), a + ' : ' + b + ' = ' + ans + '.'); }
+    if (t === 4) { let k = irand(rng, 5, 25), n = k * 4; const ans = n * 3 / 4; return fin('Cât reprezintă 3/4 din ' + n + '?', numOpts(ans, rng, 0, 120), String(ans), '3/4 din ' + n + ' = ' + n + ' : 4 = ' + (n / 4) + ', apoi × 3 = ' + ans + '.'); }
+    let l = irand(rng, 3, 25); const ans = l * 4; return fin('Cât este perimetrul unui pătrat cu latura de ' + l + ' cm?', numOpts(ans, rng, 0, 120), String(ans), 'Perimetrul pătratului = 4 × ' + l + ' = ' + ans + ' cm.');
+  }
+
+  function roQ(cls, rng) {
+    const maxT = cls === 1 ? 3 : (cls === 2 ? 5 : 6);
+    const t = Math.floor(rng() * maxT);
+    if (t === 0) {
+      const w = spick(rng, RO_WORDS);
+      const opts = wordOpts(w[1], RO_LETTERS, rng);
+      return fin('Cu ce literă începe cuvântul „' + w[0] + '"?', opts, w[1], '„' + w[0] + '" începe cu litera „' + w[1] + '".');
+    }
+    if (t === 1) {
+      const w = spick(rng, RO_WORDS);
+      const len = w[0].length;
+      return fin('Câte litere are cuvântul „' + w[0] + '"?', numOpts(len, rng, 1, 10), String(len), '„' + w[0] + '" are ' + len + ' litere.');
+    }
+    if (t === 2) {
+      const w = spick(rng, RO_WORDS);
+      const sil = w[2];
+      return fin('Câte silabe are cuvântul „' + w[0] + '"?', numOpts(sil, rng, 1, 4), String(sil), '„' + w[0] + '" are ' + sil + ' silabe.');
+    }
+    if (t === 3) {
+      const p = spick(rng, RO_ANT);
+      const opts = wordOpts(p[1], RO_ANT.map(function (x) { return x[1]; }), rng);
+      return fin('Care este opusul cuvântului „' + p[0] + '"?', opts, p[1], 'Opusul lui „' + p[0] + '" este „' + p[1] + '".');
+    }
+    if (t === 4) {
+      const p = spick(rng, RO_RIME);
+      const opts = wordOpts(p[1], RO_RIME.map(function (x) { return x[1]; }), rng);
+      return fin('Care cuvânt rimează cu „' + p[0] + '"?', opts, p[1], '„' + p[1] + '" rimează cu „' + p[0] + '".');
+    }
+    const p = spick(rng, RO_VORBIRE);
+    const tipos = srng(['substantiv', 'verb', 'adjectiv', 'pronume'], rng);
+    const art = p[1] === 'verb' ? 'un verb' : p[1] === 'adjectiv' ? 'un adjectiv' : p[1] === 'pronume' ? 'un pronume' : 'un substantiv';
+    return fin('Ce parte de vorbire este „' + p[0] + '"?', tipos, p[1], '„' + p[0] + '" este ' + art + '.');
+  }
+
+  function letterQ(letter, rng) {
+    const words = LITERA[letter];
+    const lower = letter.toLowerCase();
+    const t = Math.floor(rng() * 6);
+    if (t === 0) {
+      const letters = wordOpts(letter, ALL_LETTERS, rng);
+      return fin('Care este litera „' + letter + '"?', letters, letter, 'Litera „' + letter + '" este un sunet din alfabetul românesc.');
+    }
+    if (t === 1) {
+      const w = spick(rng, words)[0];
+      const l0 = w.charAt(0).toUpperCase();
+      const letters = wordOpts(l0, ALL_LETTERS, rng);
+      return fin('Cu ce literă începe cuvântul „' + w + '"?', letters, l0, '„' + w + '" începe cu litera „' + l0 + '".');
+    }
+    if (t === 2) {
+      const w = spick(rng, words)[0];
+      const len = w.length;
+      return fin('Câte litere are cuvântul „' + w + '"?', numOpts(len, rng, 1, 12), String(len), '„' + w + '" are ' + len + ' litere: ' + w.split('').join('-') + '.');
+    }
+    if (t === 3) {
+      const w = spick(rng, words)[0];
+      const cnt = countChar(w, lower);
+      return fin('De câte ori apare litera „' + letter + '" în cuvântul „' + w + '"?', numOpts(cnt, rng, 0, 4), String(cnt), 'Litera „' + letter + '" apare de ' + cnt + ' ori în „' + w + '".');
+    }
+    if (t === 4) {
+      const yes = spick(rng, words)[0];
+      const pool = pickDistractors(letter, 4);
+      const opts = wordOpts(yes, pool, rng);
+      return fin('Care cuvânt conține litera „' + letter + '"?', opts, yes, '„' + yes + '" conține litera „' + letter + '".');
+    }
+    return spick(rng, QUIZ_BANK[0]);
+  }
+
+  function countQ(rng) {
+    const emoji = ['🍎', '⭐', '🐤', '🌼', '🎈', '🍪', '🐟', '⚽'];
+    const e = spick(rng, emoji);
+    const n = irand(rng, 2, 9);
+    const shown = new Array(n).fill(e).join('');
+    return fin('Câte obiecte sunt? ' + shown, numOpts(n, rng, 1, 12), String(n), 'Sunt exact ' + n + ' obiecte: numără-le unul câte unul.');
+  }
+
+  function scienceQ(rng) {
+    if (rng() < 0.55) return spick(rng, SC_BANK);
+    const f = spick(rng, SC_FACTS);
+    return fin(f[0], numOpts(f[1], rng, 0, 400), String(f[1]), f[2]);
+  }
+
+  function genQuestion(n, item, letter, rng) {
+    if (n === 0) {
+      if (letter && LITERA[letter]) return letterQ(letter, rng);
+      return rng() < 0.5 ? countQ(rng) : spick(rng, QUIZ_BANK[0]);
+    }
+    if (n <= 2) {
+      const r = rng();
+      if (r < 0.55) return mathQ(n, rng);
+      if (r < 0.9) return roQ(n, rng);
+      return spick(rng, QUIZ_BANK[n]);
+    }
+    const disc = ((item.d || '') + '').toLowerCase();
+    if (disc.indexOf('rom') === 0) return roQ(n, rng);
+    if (disc.indexOf('mat') === 0) return mathQ(n, rng);
+    if (disc.indexOf('ști') === 0 || disc.indexOf('sti') === 0) return scienceQ(rng);
+    return mathQ(n, rng);
+  }
+
+  function daily(n, item) {
+    const base = get(n, item);
+    const rng = mulberry32(hash(n + '|' + (item.t || '') + '|' + (item.d || '') + '|' + todayKey()));
+    const letter = base.letter;
+    const seen = {};
+    const exercises = [];
+    const test = [];
+    let g = 0;
+    while (exercises.length < 15 && g++ < 600) {
+      const q = genQuestion(n, item, letter, rng);
+      if (!seen[q.q]) { seen[q.q] = 1; exercises.push(q); }
+    }
+    while (test.length < (n === 0 ? 6 : 8) && g++ < 1200) {
+      const q = genQuestion(n, item, letter, rng);
+      if (!seen[q.q]) { seen[q.q] = 1; test.push(q); }
+    }
+    return { parent: base.parent, activity: base.activity, letter: letter, exercises: exercises, test: test };
+  }
+
+  return { get: get, daily: daily, LITERA: LITERA };
 })();
