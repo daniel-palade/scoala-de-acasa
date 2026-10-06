@@ -56,8 +56,8 @@
     return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
   }
 
-  // ---------- conținut ----------
-  const content = CONTENT.get(n, item);
+  // ---------- conținut (generare zilnică) ----------
+  const content = CONTENT.daily(n, item);
 
   // ---------- POPUP FEEDBACK (modal) ----------
   const fbBack = document.createElement('div');
@@ -380,7 +380,7 @@
     // curățăm
     quizEl.innerHTML = '';
     let qi = 0, wrong = 0, locked = false;
-    const questions = content.quiz;
+    const questions = content.test;
 
     const progress = document.createElement('div');
     progress.className = 'q-progress';
@@ -488,6 +488,78 @@
 
   buildQuiz();
 
+  // ---------- EXERCIȚII ZILNICE (15 exerciții noi în fiecare zi) ----------
+  const exEl = $('exercises');
+  if (exEl) buildExercises();
+
+  function buildExercises() {
+    exEl.innerHTML = '';
+    let qi = 0, locked = false;
+    const questions = content.exercises;
+
+    const progress = document.createElement('div');
+    progress.className = 'q-progress';
+    const bar = document.createElement('div');
+    bar.className = 'q-bar';
+    questions.forEach(function () { bar.appendChild(document.createElement('span')); });
+    progress.appendChild(bar);
+    exEl.appendChild(progress);
+
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    exEl.appendChild(card);
+
+    function renderQ() {
+      locked = false;
+      card.innerHTML = '';
+      const dots = progress.querySelectorAll('.q-bar span');
+      dots.forEach(function (d, idx) { d.className = idx < qi ? 'done' : idx === qi ? 'cur' : ''; });
+
+      const q = questions[qi];
+      const qtitle = document.createElement('div');
+      qtitle.className = 'q-title';
+      qtitle.innerHTML = '<span class="q-num">' + (qi + 1) + '/' + questions.length + '</span> ' + q.q;
+      card.appendChild(qtitle);
+
+      const opts = document.createElement('div');
+      opts.className = 'options-grid';
+      q.o.forEach(function (opt, idx) {
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.innerHTML = '<span class="opt-key">' + String.fromCharCode(65 + idx) + '</span>' + opt;
+        b.addEventListener('click', function () { answer(idx, b); });
+        opts.appendChild(b);
+      });
+      card.appendChild(opts);
+    }
+
+    function answer(idx, btn) {
+      if (locked) return;
+      locked = true;
+      const q = questions[qi];
+      const correctIdx = q.c;
+      const isOk = idx === correctIdx;
+      const allBtns = card.querySelectorAll('.opt');
+      allBtns[correctIdx].classList.add('ok');
+      if (!isOk) btn.classList.add('no');
+      allBtns.forEach(function (b) { b.disabled = true; });
+      fbNext = function () { qi++; if (qi >= questions.length) finishEx(); else renderQ(); };
+      showFeedback(isOk, q.o[q.c], q.o[idx], q.e);
+    }
+
+    function finishEx() {
+      card.innerHTML = '';
+      const dots = progress.querySelectorAll('.q-bar span');
+      dots.forEach(function (d) { d.className = 'done'; });
+      const res = document.createElement('div');
+      res.className = 'q-result';
+      res.innerHTML = '<div class="res-emoji">🎯</div><h3>Bravo! Ai terminat exercițiile!</h3><p>Ai rezolvat toate cele ' + questions.length + ' exerciții. Mâine te așteaptă altele noi!</p>';
+      card.appendChild(res);
+    }
+
+    renderQ();
+  }
+
   // ---------- DESCĂRCARE PDF (fișă de lucru printabilă) ----------
   const btnPdf = $('btn-pdf');
   if (btnPdf) btnPdf.addEventListener('click', downloadLessonPdf);
@@ -522,9 +594,9 @@
     return h;
   }
 
-  function quizPrintable() {
+  function mcPrintable(questions) {
     let h = '';
-    content.quiz.forEach(function (q, i) {
+    questions.forEach(function (q, i) {
       h += '<p><b>' + (i + 1) + ') ' + esc(q.q) + '</b></p>';
       q.o.forEach(function (opt, j) {
         const isC = j === q.c;
@@ -552,7 +624,8 @@
       '<h1>📚 ' + esc(item.t) + '</h1>' +
       '<h2>' + esc(cls.title) + (meta ? ' · ' + esc(meta) : '') + ' · Școala de Acasă</h2>' +
       '<h3>Activitate interactivă</h3>' + activityPrintable() +
-      '<h3>Testul lecției</h3>' + quizPrintable() +
+      '<h3>Exerciții zilnice</h3>' + mcPrintable(content.exercises) +
+      '<h3>Testul lecției</h3>' + mcPrintable(content.test) +
       '<p class="footer">Fișă generată de Școala de Acasă. Răspunsurile corecte sunt marcate cu verde.</p>' +
       '</body></html>';
   }
